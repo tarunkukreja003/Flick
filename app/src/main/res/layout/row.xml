@@ -5,6 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/ic_launcher"
+        android:id="@+id/image_view"
+        android:layout_gravity="center"
+        android:layout_marginBottom="16dp"/>
+
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -12,6 +21,22 @@
         android:id="@+id/movie_title"
         android:layout_gravity="center"
         android:textSize="30sp"/>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/release"
+        android:text="Release"
+        android:textSize="24sp"
+        android:layout_marginBottom="16dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/adult"
+        android:text="Adult"
+        android:textSize="24sp"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -21,11 +46,19 @@
         android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
         android:textSize="24sp"/>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/overview"
         android:text="Overview"
-        android:textSize="20sp"/>
+        android:textSize="20sp"
+        android:layout_marginBottom="16dp"/>
+
+    <RatingBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:id="@+id/rating"/>
 
 </LinearLayout>

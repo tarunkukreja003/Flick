@@ -13,8 +13,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RatingBar;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -97,26 +101,49 @@ public class MainActivity extends AppCompatActivity {
                 final String OVERVIEW = "overview" ;
                 final String TITLE = "original_title" ;
                 final String LANGUAGE = "original_language" ;
+                final String IMAGE = "poster_path" ;
+                final String ADULT = "adult" ;
+                final String RELEASE = "release_date" ;
+                final String VOTE = "vote_average" ;
 
                 try{
 
                     JSONObject mainObj = new JSONObject(moviesJsonStr) ;
                     JSONArray moviesArray = mainObj.getJSONArray(RESULTS) ;
 
-                    MoviePage moviePage = new MoviePage();
+                    MoviePage moviePage ;
 
                     List<MoviePage> moviePageArrayList = new ArrayList<MoviePage>() ;
 
                     for(int i=0; i<moviesArray.length(); i++) {
 
+                        StringBuffer moviePosterUrl = null;
+                        moviePosterUrl = new StringBuffer() ;
+                        moviePosterUrl.append("https://image.tmdb.org/t/p/w342/");
+                        moviePage = new MoviePage();
+
                         JSONObject subObj = moviesArray.getJSONObject(i);
                         String overview = subObj.getString(OVERVIEW);
                         String lang = subObj.getString(LANGUAGE);
                         String title = subObj.getString(TITLE);
+                        String image = subObj.getString(IMAGE) ;
+                        String release_date = subObj.getString(RELEASE) ;
+                        boolean adult_or_not = subObj.getBoolean(ADULT) ;
+                        float vote = subObj.getInt(VOTE) ;
+
+
+                        moviePosterUrl.append(image);
+                        String posterUrl = moviePosterUrl.toString();
+
 
                         moviePage.setTitle(title);
                         moviePage.setLanguage(lang);
                         moviePage.setOverview(overview);
+                        moviePage.setImage(posterUrl);
+                        moviePage.setAdult(adult_or_not);
+                        moviePage.setRelease(release_date);
+                        moviePage.setRating(vote);
+
 
                         moviePageArrayList.add(i, moviePage);
                         Log.d(LOG_TAG, "Insertion" + i + "done");
@@ -240,6 +267,10 @@ public class MainActivity extends AppCompatActivity {
                 holder.title = (TextView) convertView.findViewById(R.id.movie_title);
                 holder.language = (TextView) convertView.findViewById(R.id.lang);
                 holder.overview = (TextView) convertView.findViewById(R.id.overview);
+                holder.imageView = (ImageView) convertView.findViewById(R.id.image_view);
+                holder.adult = (TextView)convertView.findViewById(R.id.adult) ;
+                holder.ratingBar = (RatingBar)convertView.findViewById(R.id.rating);
+                holder.releaseDate = (TextView)convertView.findViewById(R.id.release) ;
 
                 convertView.setTag(holder);
             }
@@ -250,6 +281,23 @@ public class MainActivity extends AppCompatActivity {
             holder.title.setText("Title: " + moviePageList.get(position).getTitle());
             holder.language.setText("Language: " + moviePageList.get(position).getLanguage());
             holder.overview.setText("Overview: " + moviePageList.get(position).getOverview());
+            holder.releaseDate.setText("Release Date" + moviePageList.get(position).getRelease());
+             if(moviePageList.get(position).isAdult()){
+                 holder.adult.setText("Adult: " + "A");
+             }
+            else{
+                 holder.adult.setText("Adult: " + "U/A");
+             }
+
+         // holder.imageView.setText("Image url: " + moviePageList.get(position).getImage());
+            String url = moviePageList.get(position).getImage();
+
+            Picasso.with(MainActivity.this).load(url)
+                   .into(holder.imageView);
+
+            float rating = moviePageList.get(position).getRating() ;
+            holder.ratingBar.setRating(rating/2);
+
             return convertView;
         }
 
@@ -258,6 +306,10 @@ public class MainActivity extends AppCompatActivity {
             private TextView title ;
             private TextView overview ;
             private TextView language ;
+            private ImageView imageView ;
+            private RatingBar ratingBar ;
+            private TextView releaseDate ;
+            private TextView adult ;
         }
     }
 
