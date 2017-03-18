@@ -15,6 +15,8 @@ public class MoviePage {
     private float rating ;
 
 
+
+
     public void setRating(float rating) {
         this.rating = rating;
     }

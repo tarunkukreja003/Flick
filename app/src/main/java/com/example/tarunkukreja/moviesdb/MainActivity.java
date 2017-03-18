@@ -1,24 +1,16 @@
 package com.example.tarunkukreja.moviesdb;
 
-import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.RatingBar;
-import android.widget.TextView;
-
-import com.squareup.picasso.Picasso;
+import android.widget.AdapterView;
+import android.widget.GridView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -39,7 +31,14 @@ public class MainActivity extends AppCompatActivity {
     private static final String LOG_TAG = MainActivity.class.getSimpleName() ;
     Uri popularUri = null ;
 
-    ListView listView ;
+
+    GridView listView;
+
+    List<MoviePage> moviePageArrayList ;
+//    RecyclerView recyclerView ;
+//    RecyclerView.LayoutManager grigLayoutManager ;
+//    RecyclerView.Adapter adapter ;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +46,19 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        listView = (ListView)findViewById(R.id.listView) ;
+        listView = (GridView)findViewById(R.id.listView) ;
+//        recyclerView = (RecyclerView)findViewById(R.id.listView) ;
+//        grigLayoutManager = new GridLayoutManager(MainActivity.this, 2) ;
+//        recyclerView.setLayoutManager(grigLayoutManager);
+
+
+
+
+
+
+
+
+
     }
 
 
@@ -59,6 +70,8 @@ public class MainActivity extends AppCompatActivity {
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
         String moviesJsonStr = null ;
+
+
 
         @Override
         protected List<MoviePage> doInBackground(String... params) {
@@ -113,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
 
                     MoviePage moviePage ;
 
-                    List<MoviePage> moviePageArrayList = new ArrayList<MoviePage>() ;
+                    moviePageArrayList = new ArrayList<MoviePage>() ;
 
                     for(int i=0; i<moviesArray.length(); i++) {
 
@@ -125,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
                         JSONObject subObj = moviesArray.getJSONObject(i);
                         String overview = subObj.getString(OVERVIEW);
                         String lang = subObj.getString(LANGUAGE);
-                        String title = subObj.getString(TITLE);
+                        String  title = subObj.getString(TITLE);
                         String image = subObj.getString(IMAGE) ;
                         String release_date = subObj.getString(RELEASE) ;
                         boolean adult_or_not = subObj.getBoolean(ADULT) ;
@@ -188,15 +201,37 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        protected void onPostExecute(List<MoviePage> res) {
+        protected void onPostExecute(final List<MoviePage> res) {
             Log.d(LOG_TAG, "onPostExecute called") ;
             super.onPostExecute(res);
 
             MovieAdapter movieAdapter = new MovieAdapter(getApplicationContext(), R.layout.row, res);
             listView.setAdapter(movieAdapter);
 
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+
+                    Log.d(LOG_TAG, "Item Clicked") ;
+
+                    MoviePage pos = res.get(position) ;
+                    String storyline = pos.getOverview() ;
+                    Bundle args = new Bundle() ;
+                    args.putString("Overview", storyline);
+
+                    Intent intent = new Intent(MainActivity.this, DetailActivity.class) ;
+                    intent.putExtras(args) ;
+                    startActivity(intent);
+
+                }
+            });
+
+
+
         }
     }
+
+
 
 //    private List<MoviePage> getMoviesDataJson(String  moviesJsonStr)throws JSONException{
 //
@@ -238,80 +273,80 @@ public class MainActivity extends AppCompatActivity {
 //    }
 
 
-
-    public class MovieAdapter extends ArrayAdapter<MoviePage> {
-
-        int resource ;
-        List<MoviePage> moviePageList ;
-        LayoutInflater inflater ;
-
-        public MovieAdapter(Context context, int resource, List<MoviePage> objects) {
-            super(context, resource, objects);
-            this.resource = resource ;
-            moviePageList = objects ;
-
-            inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE) ;
-        }
-
-        @NonNull
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-
-            ViewHolder holder = null ;
-
-            if(convertView == null) {
-
-                holder = new ViewHolder();
-                convertView = inflater.inflate(resource, null);
-
-                holder.title = (TextView) convertView.findViewById(R.id.movie_title);
-                holder.language = (TextView) convertView.findViewById(R.id.lang);
-                holder.overview = (TextView) convertView.findViewById(R.id.overview);
-                holder.imageView = (ImageView) convertView.findViewById(R.id.image_view);
-                holder.adult = (TextView)convertView.findViewById(R.id.adult) ;
-                holder.ratingBar = (RatingBar)convertView.findViewById(R.id.rating);
-                holder.releaseDate = (TextView)convertView.findViewById(R.id.release) ;
-
-                convertView.setTag(holder);
-            }
-            else {
-                holder = (ViewHolder)convertView.getTag() ;
-            }
-
-            holder.title.setText("Title: " + moviePageList.get(position).getTitle());
-            holder.language.setText("Language: " + moviePageList.get(position).getLanguage());
-            holder.overview.setText("Overview: " + moviePageList.get(position).getOverview());
-            holder.releaseDate.setText("Release Date" + moviePageList.get(position).getRelease());
-             if(moviePageList.get(position).isAdult()){
-                 holder.adult.setText("Adult: " + "A");
-             }
-            else{
-                 holder.adult.setText("Adult: " + "U/A");
-             }
-
-         // holder.imageView.setText("Image url: " + moviePageList.get(position).getImage());
-            String url = moviePageList.get(position).getImage();
-
-            Picasso.with(MainActivity.this).load(url)
-                   .into(holder.imageView);
-
-            float rating = moviePageList.get(position).getRating() ;
-            holder.ratingBar.setRating(rating/2);
-
-            return convertView;
-        }
-
-        class ViewHolder{
-
-            private TextView title ;
-            private TextView overview ;
-            private TextView language ;
-            private ImageView imageView ;
-            private RatingBar ratingBar ;
-            private TextView releaseDate ;
-            private TextView adult ;
-        }
-    }
+//
+//    public class MovieAdapter extends ArrayAdapter<MoviePage> {
+//
+//        int resource ;
+//        List<MoviePage> moviePageList ;
+//        LayoutInflater inflater ;
+//
+//        public MovieAdapter(Context context, int resource, List<MoviePage> objects) {
+//            super(context, resource, objects);
+//            this.resource = resource ;
+//            moviePageList = objects ;
+//
+//            inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE) ;
+//        }
+//
+//        @NonNull
+//        @Override
+//        public View getView(int position, View convertView, ViewGroup parent) {
+//
+//            ViewHolder holder = null ;
+//
+//            if(convertView == null) {
+//
+//                holder = new ViewHolder();
+//                convertView = inflater.inflate(resource, null);
+//
+//                holder.title = (TextView) convertView.findViewById(R.id.movie_title);
+//                holder.language = (TextView) convertView.findViewById(R.id.lang);
+//                holder.overview = (TextView) convertView.findViewById(R.id.overview);
+//                holder.imageView = (ImageView) convertView.findViewById(R.id.image_view);
+//                holder.adult = (TextView)convertView.findViewById(R.id.adult) ;
+//                holder.ratingBar = (RatingBar)convertView.findViewById(R.id.rating);
+//                holder.releaseDate = (TextView)convertView.findViewById(R.id.release) ;
+//
+//                convertView.setTag(holder);
+//            }
+//            else {
+//                holder = (ViewHolder)convertView.getTag() ;
+//            }
+//
+//            holder.title.setText("Title: " + moviePageList.get(position).getTitle());
+//            holder.language.setText("Language: " + moviePageList.get(position).getLanguage());
+//            holder.overview.setText("Overview: " + moviePageList.get(position).getOverview());
+//            holder.releaseDate.setText("Release Date" + moviePageList.get(position).getRelease());
+//             if(moviePageList.get(position).isAdult()){
+//                 holder.adult.setText("Adult: " + "A");
+//             }
+//            else{
+//                 holder.adult.setText("Adult: " + "U/A");
+//             }
+//
+//         // holder.imageView.setText("Image url: " + moviePageList.get(position).getImage());
+//            String url = moviePageList.get(position).getImage();
+//
+//            Picasso.with(MainActivity.this).load(url)
+//                   .into(holder.imageView);
+//
+//            float rating = moviePageList.get(position).getRating() ;
+//            holder.ratingBar.setRating(rating/2);
+//
+//            return convertView;
+//        }
+//
+//        class ViewHolder{
+//
+//            private TextView title ;
+//            private TextView overview ;
+//            private TextView language ;
+//            private ImageView imageView ;
+//            private RatingBar ratingBar ;
+//            private TextView releaseDate ;
+//            private TextView adult ;
+//        }
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -325,6 +360,15 @@ public class MainActivity extends AppCompatActivity {
         if(item.getItemId() == R.id.action_refresh){
             Log.d(LOG_TAG, "onRefresh") ;
             new MoviesDB().execute("http://api.themoviedb.org/3/movie/popular?api_key=aaffe5cad18de82872dc777a55d9ac51");
+            return true ;
+
+
+        }
+
+        else if(item.getItemId() == R.id.action_settings){
+
+            Intent intent = new Intent(MainActivity.this, SettingsActivity.class) ;
+            startActivity(intent);
             return true ;
         }
         return super.onOptionsItemSelected(item);
