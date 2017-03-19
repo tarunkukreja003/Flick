@@ -4,7 +4,7 @@
     <ListPreference
         android:title="Sort By"
         android:key="@string/movies_pref_key"
-        android:defaultValue="@string/popular_sort"
+        android:defaultValue="@string/top_rated_sort"
         android:entries="@array/SortBy"
         android:entryValues="@array/SortByValues"
         />

@@ -79,6 +79,8 @@ public class MovieAdapter extends ArrayAdapter<MoviePage> {
         float rating = moviePageList.get(position).getRating() ;
         holder.ratingBar.setRating(rating/2);
 
+
+
         return convertView;
     }
 

@@ -1,9 +1,11 @@
 package com.example.tarunkukreja.moviesdb;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -33,8 +35,9 @@ import java.util.List;
 public class HomeActivity extends AppCompatActivity {
 
 
-    private static final String LOG_TAG = MainActivity.class.getSimpleName() ;
+    private static final String LOG_TAG = HomeActivity.class.getSimpleName() ;
     Uri popularUri = null ;
+    Uri topRatedUri = null ;
 
 
     GridView listView;
@@ -84,17 +87,35 @@ public class HomeActivity extends AppCompatActivity {
 
 
             try {
-                String basePopularUrl = "http://api.themoviedb.org/3/movie" ;
+                String baseUrl = "http://api.themoviedb.org/3/movie" ;
                 final String popular_sort = "popular" ;
+                final String top_rated_sort = "top_rated" ;
 
                 final String MOVIES_API_KEY = "api_key" ;
 
-                popularUri = Uri.parse(basePopularUrl).buildUpon()
+                popularUri = Uri.parse(baseUrl).buildUpon()
+                        .appendPath(popular_sort)
+                        .appendQueryParameter(MOVIES_API_KEY, BuildConfig.MOVIESDB_API_KEY)
+                        .build();
+                topRatedUri = Uri.parse(baseUrl).buildUpon()
+                        .appendPath(top_rated_sort)
                         .appendQueryParameter(MOVIES_API_KEY, BuildConfig.MOVIESDB_API_KEY)
                         .build();
                 URL popularUrl = new URL(popularUri.toString()) ;
+                URL topUrl = new URL(topRatedUri.toString()) ;
 
-                urlConnection = (HttpURLConnection)popularUrl.openConnection() ;
+                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                if(sharedPreferences.getString(getString(R.string.movies_pref_key), getString(R.string.popular_sort))
+                        .equals(getString(R.string.popular_label))) {
+                    urlConnection = (HttpURLConnection) popularUrl.openConnection();
+                }
+
+                else if(sharedPreferences.getString(getString(R.string.movies_pref_key), getString(R.string.top_rated_sort))
+                        .equals(getString(R.string.top_rated_label))){
+                    urlConnection = (HttpURLConnection)topUrl.openConnection() ;
+                }
+
+
                 urlConnection.connect();
                 Log.d(LOG_TAG, "URL connected") ;
 
@@ -220,8 +241,9 @@ public class HomeActivity extends AppCompatActivity {
 
                     Log.d(LOG_TAG, "Item Clicked") ;
 
-                    MoviePage pos = res.get(position) ;
-                    String storyline = pos.getOverview() ;
+                  //  MoviePage pos = res.get(position) ;
+                    MoviePage pos1 = (MoviePage)parent.getItemAtPosition(position) ;
+                    String storyline = pos1.getOverview() ;
                     Bundle args = new Bundle() ;
                     args.putString("Overview", storyline);
 
@@ -365,7 +387,26 @@ public class HomeActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId() == R.id.action_refresh){
             Log.d(LOG_TAG, "onRefresh") ;
-            new MoviesDB().execute("http://api.themoviedb.org/3/movie/popular?api_key=aaffe5cad18de82872dc777a55d9ac51");
+
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+            Log.d(LOG_TAG, String.valueOf(sharedPreferences.getString(getString(R.string.movies_pref_key), getString(R.string.popular_label)))) ;
+            Log.d(LOG_TAG, String.valueOf(sharedPreferences.getString(getString(R.string.movies_pref_key), getString(R.string.top_rated_label)))) ;
+            if(sharedPreferences.getString(getString(R.string.movies_pref_key), getString(R.string.popular_sort))
+                    .equals(getString(R.string.popular_label))) {
+
+
+                new MoviesDB().execute("http://api.themoviedb.org/3/movie/popular?api_key=aaffe5cad18de82872dc777a55d9ac51");
+            }
+
+            else if(sharedPreferences.getString(getString(R.string.movies_pref_key), getString(R.string.top_rated_sort))
+                .equals(getString(R.string.top_rated_label))){
+
+                new MoviesDB().execute("https://api.themoviedb.org/3/movie/top_rated?api_key=aaffe5cad18de82872dc777a55d9ac51");
+            }
+
+            else{
+                Log.d(LOG_TAG, "Else called") ;
+            }
             return true ;
 
 

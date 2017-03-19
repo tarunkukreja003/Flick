@@ -11,6 +11,10 @@ import android.preference.PreferenceManager;
  */
 
 public class SettingsActivity extends PreferenceActivity implements Preference.OnPreferenceChangeListener{
+//
+//    private static final String MY_PREFS = "Shared Preferences" ;
+//    private static final String POPULAR = "popular movies key" ;
+//    private static final String TOP_RATED = "top movies key" ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,6 +23,13 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
         addPreferencesFromResource(R.xml.pref_general);
 
         bindPreferenceSummaryToValue(findPreference(getString(R.string.movies_pref_key)));
+
+//        SharedPreferences sharedPreferences = getSharedPreferences(MY_PREFS, Context.MODE_PRIVATE);
+//        SharedPreferences.Editor editor = sharedPreferences.edit() ;
+//
+//      //  editor.putString(POPULAR, getString(R.string.popular_sort)) ;
+//        editor.putString(TOP_RATED, getString(R.string.top_rated_sort)) ;
+//        editor.apply();
 
     }
 
@@ -49,6 +60,6 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
         else {
             preference.setSummary(preferenceVal);
         }
-        return false;
+        return true;
     }
 }
