@@ -34,39 +34,35 @@ import java.util.List;
  * Created by tarunkukreja on 19/03/17.
  */
 
-public class FragmentPopular extends Fragment {
+public class FragmentTopRated extends Fragment {
 
-    private static final String LOG_TAG = FragmentPopular.class.getSimpleName() ;
-    Uri popularUri = null ;
+    private static final String LOG_TAG = FragmentTopRated.class.getSimpleName() ;
+   // Uri popularUri = null ;
+    Uri topRatedUri = null ;
 
-    GridView gridView ;
 
-    private List<MoviePage> moviePageArrayList ;
+    GridView gridViewTop;
+
+    List<MoviePage> moviePageArrayListTop ;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
-       View view = inflater.inflate(R.layout.fragment_popular, container, false) ;
-
-       // gridView = (GridView)view.findViewById(R.id.gridView_pop);
+        View view = inflater.inflate(R.layout.fragment_top_rated, container, false) ;
+       // gridViewTop = (GridView)view.findViewById(R.id.gridView_top) ;
 
         return view ;
-
-
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        gridView = (GridView)getActivity().findViewById(R.id.gridView_pop) ;
+        gridViewTop = (GridView)getActivity().findViewById(R.id.gridView_top) ;
 
         setHasOptionsMenu(true);
-
     }
 
-    public class MoviesPop extends AsyncTask<String, String, List<MoviePage>>{
+    public class MoviesTopRated extends AsyncTask<String, String, List<MoviePage>>{
 
         private HttpURLConnection urlConnection = null;
         private BufferedReader reader = null;
@@ -81,32 +77,32 @@ public class FragmentPopular extends Fragment {
 
             try {
                 String baseUrl = "http://api.themoviedb.org/3/movie" ;
-                final String popular_sort = "popular" ;
-                //final String top_rated_sort = "top_rated" ;
+              //  final String popular_sort = "popular" ;
+                final String top_rated_sort = "top_rated" ;
 
                 final String MOVIES_API_KEY = "api_key" ;
 
-                popularUri = Uri.parse(baseUrl).buildUpon()
-                        .appendPath(popular_sort)
-                        .appendQueryParameter(MOVIES_API_KEY, BuildConfig.MOVIESDB_API_KEY)
-                        .build();
-//                topRatedUri = Uri.parse(baseUrl).buildUpon()
-//                        .appendPath(top_rated_sort)
+                //popularUri = Uri.parse(baseUrl).buildUpon()
+//                        .appendPath(popular_sort)
 //                        .appendQueryParameter(MOVIES_API_KEY, BuildConfig.MOVIESDB_API_KEY)
 //                        .build();
-                URL popularUrl = new URL(popularUri.toString()) ;
-             //   URL topUrl = new URL(topRatedUri.toString()) ;
+                topRatedUri = Uri.parse(baseUrl).buildUpon()
+                        .appendPath(top_rated_sort)
+                        .appendQueryParameter(MOVIES_API_KEY, BuildConfig.MOVIESDB_API_KEY)
+                        .build();
+               // URL popularUrl = new URL(popularUri.toString()) ;
+                URL topUrl = new URL(topRatedUri.toString()) ;
 
-//                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+//                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 //                if(sharedPreferences.getString(getString(R.string.movies_pref_key), getString(R.string.popular_sort))
 //                        .equals(getString(R.string.popular_label))) {
-                urlConnection = (HttpURLConnection) popularUrl.openConnection();
-               // }
+                  //  urlConnection = (HttpURLConnection) popularUrl.openConnection();
+                //}
 
 //                else if(sharedPreferences.getString(getString(R.string.movies_pref_key), getString(R.string.top_rated_sort))
 //                        .equals(getString(R.string.top_rated_label))){
-//                    urlConnection = (HttpURLConnection)topUrl.openConnection() ;
-//                }
+                    urlConnection = (HttpURLConnection)topUrl.openConnection() ;
+              //  }
 
 
                 urlConnection.connect();
@@ -146,7 +142,7 @@ public class FragmentPopular extends Fragment {
 
                     MoviePage moviePage ;
 
-                    moviePageArrayList = new ArrayList<MoviePage>() ;
+                    moviePageArrayListTop = new ArrayList<MoviePage>() ;
 
                     for(int i=0; i<moviesArray.length(); i++) {
 
@@ -178,11 +174,11 @@ public class FragmentPopular extends Fragment {
                         moviePage.setRating(vote);
 
 
-                        moviePageArrayList.add(i, moviePage);
+                        moviePageArrayListTop.add(i, moviePage);
                         Log.d(LOG_TAG, "Insertion" + i + "done");
                     }
 
-                    return moviePageArrayList;
+                    return moviePageArrayListTop;
 
                 }catch (JSONException e){
                     Log.e(LOG_TAG, "Error in JSON") ;
@@ -226,16 +222,16 @@ public class FragmentPopular extends Fragment {
             super.onPostExecute(res);
 
             MovieAdapter movieAdapter = new MovieAdapter(getActivity(), R.layout.row, res);
-            gridView.setAdapter(movieAdapter) ;
+            gridViewTop.setAdapter(movieAdapter);
 
-            gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            gridViewTop.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
 
                     Log.d(LOG_TAG, "Item Clicked") ;
 
                     //  MoviePage pos = res.get(position) ;
-                    MoviePage pos1 = res.get(position);
+                    MoviePage pos1 = (MoviePage)parent.getItemAtPosition(position) ;
                     String storyline = pos1.getOverview() ;
                     Bundle args = new Bundle() ;
                     args.putString("Overview", storyline);
@@ -250,14 +246,12 @@ public class FragmentPopular extends Fragment {
 
 
         }
-
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.main_menu, menu);
-
     }
 
     @Override
@@ -266,7 +260,7 @@ public class FragmentPopular extends Fragment {
         if(item.getItemId() == R.id.action_refresh) {
             Log.d(LOG_TAG, "onRefresh");
 
-            new MoviesPop().execute("http://api.themoviedb.org/3/movie/popular?api_key=aaffe5cad18de82872dc777a55d9ac51");
+            new MoviesTopRated().execute("http://api.themoviedb.org/3/movie/top_rated?api_key=aaffe5cad18de82872dc777a55d9ac51");
             return true;
         }
 
