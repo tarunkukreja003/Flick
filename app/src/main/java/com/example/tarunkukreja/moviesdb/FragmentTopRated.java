@@ -38,10 +38,10 @@ public class FragmentTopRated extends Fragment {
 
     private static final String LOG_TAG = FragmentTopRated.class.getSimpleName() ;
    // Uri popularUri = null ;
-    Uri topRatedUri = null ;
+    Uri nowPlayingUri = null ;
 
 
-    GridView gridViewTop;
+   GridView  gridViewNowPlaying ;
 
 
 
@@ -49,7 +49,7 @@ public class FragmentTopRated extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_top_rated, container, false) ;
-        gridViewTop = (GridView)view.findViewById(R.id.gridView_top) ;
+        gridViewNowPlaying = (GridView)view.findViewById(R.id.gridView_top) ;
 
         return view ;
     }
@@ -62,7 +62,7 @@ public class FragmentTopRated extends Fragment {
         setHasOptionsMenu(true);
     }
 
-    public class MoviesTopRated extends AsyncTask<String, String, List<MoviePage>>{
+    private class MoviesTopRated extends AsyncTask<String, String, List<MoviePage>>{
 
         private HttpURLConnection urlConnection = null;
         private BufferedReader reader = null;
@@ -76,7 +76,7 @@ public class FragmentTopRated extends Fragment {
 
 
             try {
-                String baseUrl = "http://api.themoviedb.org/3/movie/top_rated?" ;
+                String baseUrl = "http://api.themoviedb.org/3/movie/now_playing?" ;
               //  final String popular_sort = "popular" ;
                // final String top_rated_sort = "top_rated" ;
 
@@ -86,11 +86,11 @@ public class FragmentTopRated extends Fragment {
 //                        .appendPath(popular_sort)
 //                        .appendQueryParameter(MOVIES_API_KEY, BuildConfig.MOVIESDB_API_KEY)
 //                        .build();
-                topRatedUri = Uri.parse(baseUrl).buildUpon()
+                nowPlayingUri = Uri.parse(baseUrl).buildUpon()
                         .appendQueryParameter(MOVIES_API_KEY, BuildConfig.MOVIESDB_API_KEY)
                         .build();
 
-                URL topUrl = new URL(topRatedUri.toString()) ;
+                URL topUrl = new URL(nowPlayingUri.toString()) ;
                 urlConnection = (HttpURLConnection)topUrl.openConnection() ;
                 urlConnection.connect();
                 Log.d(LOG_TAG, "URL connected") ;
@@ -129,14 +129,14 @@ public class FragmentTopRated extends Fragment {
 
                 final String RESULTS = "results" ;
                 final String OVERVIEW = "overview" ;
-                final String TITLE = "original_title" ;
+                final String TITLE = "title" ;
                 final String LANGUAGE = "original_language" ;
                 final String IMAGE = "poster_path" ;
                 final String ADULT = "adult" ;
                 final String RELEASE = "release_date" ;
                 final String VOTE = "vote_average" ;
 
-                List<MoviePage> moviePageArrayListTop ;
+                List<MoviePage> moviePageArrayListPlaying ;
 
                 try{
 
@@ -145,7 +145,7 @@ public class FragmentTopRated extends Fragment {
 
                     MoviePage moviePage ;
 
-                    moviePageArrayListTop = new ArrayList<MoviePage>() ;
+                    moviePageArrayListPlaying = new ArrayList<MoviePage>() ;
 
                     for(int i=0; i<moviesArray.length(); i++) {
 
@@ -177,11 +177,11 @@ public class FragmentTopRated extends Fragment {
                         moviePage.setRating(vote);
 
 
-                        moviePageArrayListTop.add(i, moviePage);
+                        moviePageArrayListPlaying.add(i, moviePage);
                         Log.d(LOG_TAG, "Insertion" + i + "done");
                     }
 
-                    return moviePageArrayListTop;
+                    return moviePageArrayListPlaying;
 
                 }catch (JSONException e){
                     Log.e(LOG_TAG, "Error in JSON") ;
@@ -225,9 +225,9 @@ public class FragmentTopRated extends Fragment {
             super.onPostExecute(res);
 
             MovieAdapter movieAdapter = new MovieAdapter(getActivity(), R.layout.row, res);
-            gridViewTop.setAdapter(movieAdapter);
+            gridViewNowPlaying.setAdapter(movieAdapter);
 
-            gridViewTop.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            gridViewNowPlaying.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
 
@@ -263,16 +263,16 @@ public class FragmentTopRated extends Fragment {
         if(item.getItemId() == R.id.action_refresh) {
             Log.d(LOG_TAG, "onRefresh");
 
-            new MoviesTopRated().execute("http://api.themoviedb.org/3/movie/top_rated?api_key=aaffe5cad18de82872dc777a55d9ac51");
+            new MoviesTopRated().execute("http://api.themoviedb.org/3/movie/now_playing?api_key=" + BuildConfig.MOVIESDB_API_KEY);
             return true;
         }
 
-        else if(item.getItemId() == R.id.action_settings){
-
-            Intent intent = new Intent(getActivity(), SettingsActivity.class) ;
-            startActivity(intent);
-            return true ;
-        }
+//        else if(item.getItemId() == R.id.action_settings){
+//
+//            Intent intent = new Intent(getActivity(), SettingsActivity.class) ;
+//            startActivity(intent);
+//            return true ;
+//        }
         return super.onOptionsItemSelected(item);
     }
 }

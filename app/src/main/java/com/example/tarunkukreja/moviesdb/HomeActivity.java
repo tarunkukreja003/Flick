@@ -19,13 +19,14 @@ public class HomeActivity extends AppCompatActivity implements ActionBar.TabList
     ViewPager viewPager;
     TabAdapter tabAdapter ;
     android.support.v7.app.ActionBar actionBar ;
-    private static final int NO_OF_TABS = 2 ;
+    private static final int NO_OF_TABS = 3 ;
 
     private static final String LOG_TAG = HomeActivity.class.getSimpleName() ;
 
     private String[] tabs = {
       "Popular",
-      "Top Rated"
+      "Now Playing",
+      "Upcoming"
     };
 //    Uri popularUri = null ;
 //    Uri topRatedUri = null ;
@@ -54,7 +55,7 @@ public class HomeActivity extends AppCompatActivity implements ActionBar.TabList
         actionBar = getSupportActionBar() ;
         viewPager.setAdapter(tabAdapter);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-        viewPager.setOffscreenPageLimit(2);
+        viewPager.setOffscreenPageLimit(3);
 
         for(String tab_name : tabs){
             actionBar.addTab(actionBar.newTab().setText(tab_name).setTabListener(this));
@@ -110,6 +111,10 @@ public class HomeActivity extends AppCompatActivity implements ActionBar.TabList
             else if(position == 1){
                 fragment = new FragmentTopRated() ;
             }
+
+            else if(position == 2){
+                fragment = new FragmentUpcoming() ;
+            }
             return fragment;
         }
 
@@ -122,12 +127,14 @@ public class HomeActivity extends AppCompatActivity implements ActionBar.TabList
         public CharSequence getPageTitle(int position) {
             String title = null ;
             if(position == 0){
-                title = "Popular" ;
-                return title;
+                title = tabs[0] ;
             }
             else if(position == 1){
-                title = "Top Rated" ;
-                return title;
+                title = tabs[1] ;
+            }
+
+            else if(position == 2){
+                title = tabs[2] ;
             }
             return title;
         }
@@ -461,7 +468,7 @@ public class HomeActivity extends AppCompatActivity implements ActionBar.TabList
 //                    .equals(getString(R.string.popular_label))) {
 //
 //
-//                new MoviesDB().execute("http://api.themoviedb.org/3/movie/popular?api_key=aaffe5cad18de82872dc777a55d9ac51");
+//                new MoviesDB().execute("http://api.themoviedb.org/3/movie/popular?api_key=");
 //            }
 //
 //            else if(sharedPreferences.getString(getString(R.string.movies_pref_key), getString(R.string.top_rated_sort))
@@ -469,7 +476,7 @@ public class HomeActivity extends AppCompatActivity implements ActionBar.TabList
 //
 //
 //
-//             //   .execute("https://api.themoviedb.org/3/movie/top_rated?api_key=aaffe5cad18de82872dc777a55d9ac51");
+//             //   .execute("https://api.themoviedb.org/3/movie/top_rated?api_key=");
 //            }
 //
 //            else{

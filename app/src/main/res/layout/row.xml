@@ -29,13 +29,14 @@
 
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Title"
+        android:textStyle="bold"
         android:id="@+id/movie_title"
-        android:layout_gravity="center"
+        android:gravity="center"
         android:layout_marginBottom="16dp"
-        android:textSize="30sp"/>
+        android:textSize="20sp"/>
 
 
     <TextView
@@ -53,6 +54,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:numStars="5"
         android:id="@+id/rating"
         />
 

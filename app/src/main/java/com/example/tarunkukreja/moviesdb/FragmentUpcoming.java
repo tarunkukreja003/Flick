@@ -31,142 +31,134 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by tarunkukreja on 19/03/17.
+ * Created by tarunkukreja on 20/03/17.
  */
 
-public class FragmentPopular extends Fragment {
+public class FragmentUpcoming extends Fragment {
 
-    private static final String LOG_TAG = FragmentPopular.class.getSimpleName() ;
-    Uri popularUri = null ;
+    private static final String LOG_TAG = FragmentUpcoming.class.getSimpleName();
+    // Uri popularUri = null ;
+    Uri UpcomingUri = null;
 
-    GridView gridView ;
+
+    GridView gridViewUpcoming;
 
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_upcoming, container, false);
+        gridViewUpcoming = (GridView) view.findViewById(R.id.gridView_upcoming);
 
-       View view = inflater.inflate(R.layout.fragment_popular, container, false) ;
-
-       gridView = (GridView)view.findViewById(R.id.gridView_pop);
-
-        return view ;
-
-
+        return view;
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-       // gridView = (GridView)getActivity().findViewById(R.id.gridView_pop) ;
+        // gridViewTop = (GridView)getActivity().findViewById(R.id.gridView_top) ;
 
         setHasOptionsMenu(true);
-
     }
 
-    private class MoviesPop extends AsyncTask<String, String, List<MoviePage>>{
+    private class MoviesUpcoming extends AsyncTask<String, String, List<MoviePage>> {
 
         private HttpURLConnection urlConnection = null;
         private BufferedReader reader = null;
-        private String moviesJsonStr = null ;
-
+        private String moviesJsonStr = null;
 
 
         @Override
         protected List<MoviePage> doInBackground(String... params) {
 
 
-
             try {
-                String baseUrl = "http://api.themoviedb.org/3/movie/popular?" ;
-              //  final String popular_sort = "popular" ;
-                //final String top_rated_sort = "top_rated" ;
+                String baseUrl = "http://api.themoviedb.org/3/movie/upcoming?";
+                //  final String popular_sort = "popular" ;
+                // final String top_rated_sort = "top_rated" ;
 
-                final String MOVIES_API_KEY = "api_key" ;
+                final String MOVIES_API_KEY = "api_key";
 
-                popularUri = Uri.parse(baseUrl).buildUpon()
-                        .appendQueryParameter(MOVIES_API_KEY, BuildConfig.MOVIESDB_API_KEY)
-                        .build();
-                URL popularUrl = new URL(popularUri.toString()) ;
-                urlConnection = (HttpURLConnection) popularUrl.openConnection();
-                urlConnection.connect();
-                Log.d(LOG_TAG, "URL connected") ;
-//                topRatedUri = Uri.parse(baseUrl).buildUpon()
-//                        .appendPath(top_rated_sort)
+                //popularUri = Uri.parse(baseUrl).buildUpon()
+//                        .appendPath(popular_sort)
 //                        .appendQueryParameter(MOVIES_API_KEY, BuildConfig.MOVIESDB_API_KEY)
 //                        .build();
+                UpcomingUri = Uri.parse(baseUrl).buildUpon()
+                        .appendQueryParameter(MOVIES_API_KEY, BuildConfig.MOVIESDB_API_KEY)
+                        .build();
 
-             //   URL topUrl = new URL(topRatedUri.toString()) ;
+                URL topUrl = new URL(UpcomingUri.toString());
+                urlConnection = (HttpURLConnection) topUrl.openConnection();
+                urlConnection.connect();
+                Log.d(LOG_TAG, "URL connected");
 
-//                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                // URL popularUrl = new URL(popularUri.toString()) ;
+
+//                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 //                if(sharedPreferences.getString(getString(R.string.movies_pref_key), getString(R.string.popular_sort))
 //                        .equals(getString(R.string.popular_label))) {
-
-               // }
+                //  urlConnection = (HttpURLConnection) popularUrl.openConnection();
+                //}
 
 //                else if(sharedPreferences.getString(getString(R.string.movies_pref_key), getString(R.string.top_rated_sort))
 //                        .equals(getString(R.string.top_rated_label))){
-//                    urlConnection = (HttpURLConnection)topUrl.openConnection() ;
-//                }
+
+                //  }
 
 
-
-
-                InputStream inputStream = urlConnection.getInputStream() ;
+                InputStream inputStream = urlConnection.getInputStream();
 
                 reader = new BufferedReader(new InputStreamReader(inputStream));
 
-                StringBuffer stringBuffer = new StringBuffer() ;
+                StringBuffer stringBuffer = new StringBuffer();
                 String line = " ";
 
-                if((line = reader.readLine())!= null){
+                if ((line = reader.readLine()) != null) {
 
-                    stringBuffer.append(line) ;
+                    stringBuffer.append(line);
                 }
 
-                if(stringBuffer.length() == 0){
-                    Log.d(LOG_TAG, "String Buffer is null");
+                if (stringBuffer.length() == 0) {
                     return null;
                 }
 
-                moviesJsonStr = stringBuffer.toString() ;
+                moviesJsonStr = stringBuffer.toString();
 
-                final String RESULTS = "results" ;
-                final String OVERVIEW = "overview" ;
-                final String TITLE = "title" ;
-                final String LANGUAGE = "original_language" ;
-                final String IMAGE = "poster_path" ;
-                final String ADULT = "adult" ;
-                final String RELEASE = "release_date" ;
-                final String VOTE = "vote_average" ;
+                final String RESULTS = "results";
+                final String OVERVIEW = "overview";
+                final String TITLE = "title";
+                final String LANGUAGE = "original_language";
+                final String IMAGE = "poster_path";
+                final String ADULT = "adult";
+                final String RELEASE = "release_date";
+                final String VOTE = "vote_average";
 
-                List<MoviePage> moviePageArrayList ;
+                List<MoviePage> moviePageArrayListUpcoming;
 
-                try{
+                try {
 
-                    JSONObject mainObj = new JSONObject(moviesJsonStr) ;
-                    JSONArray moviesArray = mainObj.getJSONArray(RESULTS) ;
+                    JSONObject mainObj = new JSONObject(moviesJsonStr);
+                    JSONArray moviesArray = mainObj.getJSONArray(RESULTS);
 
-                    MoviePage moviePage ;
+                    MoviePage moviePage;
 
-                    moviePageArrayList = new ArrayList<MoviePage>() ;
+                    moviePageArrayListUpcoming = new ArrayList<MoviePage>();
 
-                    for(int i=0; i<moviesArray.length(); i++) {
+                    for (int i = 0; i < moviesArray.length(); i++) {
 
                         StringBuffer moviePosterUrl = null;
-                        moviePosterUrl = new StringBuffer() ;
+                        moviePosterUrl = new StringBuffer();
                         moviePosterUrl.append("https://image.tmdb.org/t/p/w342/");
                         moviePage = new MoviePage();
 
                         JSONObject subObj = moviesArray.getJSONObject(i);
                         String overview = subObj.getString(OVERVIEW);
                         String lang = subObj.getString(LANGUAGE);
-                        String  title = subObj.getString(TITLE);
-                        String image = subObj.getString(IMAGE) ;
-                        String release_date = subObj.getString(RELEASE) ;
-                        boolean adult_or_not = subObj.getBoolean(ADULT) ;
-                        float vote = subObj.getInt(VOTE) ;
+                        String title = subObj.getString(TITLE);
+                        String image = subObj.getString(IMAGE);
+                        String release_date = subObj.getString(RELEASE);
+                        boolean adult_or_not = subObj.getBoolean(ADULT);
+                        float vote = subObj.getInt(VOTE);
 
 
                         moviePosterUrl.append(image);
@@ -182,40 +174,39 @@ public class FragmentPopular extends Fragment {
                         moviePage.setRating(vote);
 
 
-                        moviePageArrayList.add(i, moviePage);
+                        moviePageArrayListUpcoming.add(i, moviePage);
                         Log.d(LOG_TAG, "Insertion" + i + "done");
                     }
 
-                    return moviePageArrayList;
+                    return moviePageArrayListUpcoming;
 
-                }catch (JSONException e){
-                    Log.e(LOG_TAG, "Error in JSON") ;
+                } catch (JSONException e) {
+                    Log.e(LOG_TAG, "Error in JSON");
                     e.printStackTrace();
                 }
 
 
             } catch (MalformedURLException e) {
-                Log.e(LOG_TAG, "Error in Malformed") ;
+                Log.e(LOG_TAG, "Error in Malformed");
                 e.printStackTrace();
             } catch (IOException e) {
                 Log.e(LOG_TAG, "Error");
                 e.printStackTrace();
             } finally {
-                if(urlConnection != null){
+                if (urlConnection != null) {
                     urlConnection.disconnect();
                     Log.d(LOG_TAG, "url disconnected");
 
-                    if(reader != null){
+                    if (reader != null) {
                         try {
                             reader.close();
                             Log.d(LOG_TAG, "reader closed");
                         } catch (IOException e) {
-                            Log.e(LOG_TAG, "Some issues with Reader") ;
+                            Log.e(LOG_TAG, "Some issues with Reader");
                             e.printStackTrace();
                         }
                     }
                 }
-
 
 
             }
@@ -226,60 +217,52 @@ public class FragmentPopular extends Fragment {
 
         @Override
         protected void onPostExecute(final List<MoviePage> res) {
-            Log.d(LOG_TAG, "onPostExecute called") ;
+            Log.d(LOG_TAG, "onPostExecute called");
             super.onPostExecute(res);
 
             MovieAdapter movieAdapter = new MovieAdapter(getActivity(), R.layout.row, res);
-            gridView.setAdapter(movieAdapter) ;
+            gridViewUpcoming.setAdapter(movieAdapter);
 
-            gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            gridViewUpcoming.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
 
-                    Log.d(LOG_TAG, "Item Clicked") ;
+                    Log.d(LOG_TAG, "Item Clicked");
 
                     //  MoviePage pos = res.get(position) ;
-                    MoviePage pos1 = res.get(position);
-                    String storyline = pos1.getOverview() ;
-                    Bundle args = new Bundle() ;
+                    MoviePage pos1 = (MoviePage) parent.getItemAtPosition(position);
+                    String storyline = pos1.getOverview();
+                    Bundle args = new Bundle();
                     args.putString("Overview", storyline);
 
-                    Intent intent = new Intent(getActivity(), DetailActivity.class) ;
-                    intent.putExtras(args) ;
+                    Intent intent = new Intent(getActivity(), DetailActivity.class);
+                    intent.putExtras(args);
                     startActivity(intent);
 
                 }
             });
 
 
-
         }
-
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.main_menu, menu);
-
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        if(item.getItemId() == R.id.action_refresh) {
+        if (item.getItemId() == R.id.action_refresh) {
             Log.d(LOG_TAG, "onRefresh");
 
-            new MoviesPop().execute("http://api.themoviedb.org/3/movie/popular?api_key=" + BuildConfig.MOVIESDB_API_KEY);
+            new MoviesUpcoming().execute("http://api.themoviedb.org/3/movie/upcoming?api_key=" + BuildConfig.MOVIESDB_API_KEY);
             return true;
         }
-
-//        else if(item.getItemId() == R.id.action_settings){
-//
-//            Intent intent = new Intent(getActivity(), SettingsActivity.class) ;
-//            startActivity(intent);
-//            return true ;
-//        }
         return super.onOptionsItemSelected(item);
     }
+
 }
+

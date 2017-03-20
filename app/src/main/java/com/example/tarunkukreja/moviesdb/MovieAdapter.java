@@ -65,15 +65,15 @@ public class MovieAdapter extends ArrayAdapter<MoviePage> {
             holder = (ViewHolder)convertView.getTag() ;
         }
 
-        holder.title.setText("Title: " + moviePageList.get(position).getTitle());
+        holder.title.setText(moviePageList.get(position).getTitle());
 //        holder.language.setText("Language: " + moviePageList.get(position).getLanguage());
 //        holder.overview.setText("Overview: " + moviePageList.get(position).getOverview());
 //        holder.releaseDate.setText("Release Date" + moviePageList.get(position).getRelease());
         if(moviePageList.get(position).isAdult()){
-            holder.adult.setText("Adult: " + "A");
+            holder.adult.setText("A");
         }
         else{
-            holder.adult.setText("Adult: " + "U/A");
+            holder.adult.setText("U/A");
         }
 
         // holder.imageView.setText("Image url: " + moviePageList.get(position).getImage());
