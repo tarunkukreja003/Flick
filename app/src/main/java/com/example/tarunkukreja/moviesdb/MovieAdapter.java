@@ -2,6 +2,7 @@ package com.example.tarunkukreja.moviesdb;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,8 @@ import static android.content.Context.LAYOUT_INFLATER_SERVICE;
  */
 
 public class MovieAdapter extends ArrayAdapter<MoviePage> {
+
+    private static final String LOG_TAG = MovieAdapter.class.getSimpleName() ;
 
     int resource ;
     List<MoviePage> moviePageList ;
@@ -42,6 +45,8 @@ public class MovieAdapter extends ArrayAdapter<MoviePage> {
 
         if(convertView == null) {
 
+            Log.d(LOG_TAG, "ConvertView is null") ;
+
             holder = new ViewHolder();
             convertView = inflater.inflate(resource, null);
 
@@ -56,6 +61,7 @@ public class MovieAdapter extends ArrayAdapter<MoviePage> {
             convertView.setTag(holder);
         }
         else {
+            Log.d(LOG_TAG, "ConvertView is not NULL") ;
             holder = (ViewHolder)convertView.getTag() ;
         }
 

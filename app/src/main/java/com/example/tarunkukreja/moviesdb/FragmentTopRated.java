@@ -43,13 +43,13 @@ public class FragmentTopRated extends Fragment {
 
     GridView gridViewTop;
 
-    List<MoviePage> moviePageArrayListTop ;
+
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_top_rated, container, false) ;
-       // gridViewTop = (GridView)view.findViewById(R.id.gridView_top) ;
+        gridViewTop = (GridView)view.findViewById(R.id.gridView_top) ;
 
         return view ;
     }
@@ -57,7 +57,7 @@ public class FragmentTopRated extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        gridViewTop = (GridView)getActivity().findViewById(R.id.gridView_top) ;
+       // gridViewTop = (GridView)getActivity().findViewById(R.id.gridView_top) ;
 
         setHasOptionsMenu(true);
     }
@@ -76,9 +76,9 @@ public class FragmentTopRated extends Fragment {
 
 
             try {
-                String baseUrl = "http://api.themoviedb.org/3/movie" ;
+                String baseUrl = "http://api.themoviedb.org/3/movie/top_rated?" ;
               //  final String popular_sort = "popular" ;
-                final String top_rated_sort = "top_rated" ;
+               // final String top_rated_sort = "top_rated" ;
 
                 final String MOVIES_API_KEY = "api_key" ;
 
@@ -87,11 +87,15 @@ public class FragmentTopRated extends Fragment {
 //                        .appendQueryParameter(MOVIES_API_KEY, BuildConfig.MOVIESDB_API_KEY)
 //                        .build();
                 topRatedUri = Uri.parse(baseUrl).buildUpon()
-                        .appendPath(top_rated_sort)
                         .appendQueryParameter(MOVIES_API_KEY, BuildConfig.MOVIESDB_API_KEY)
                         .build();
-               // URL popularUrl = new URL(popularUri.toString()) ;
+
                 URL topUrl = new URL(topRatedUri.toString()) ;
+                urlConnection = (HttpURLConnection)topUrl.openConnection() ;
+                urlConnection.connect();
+                Log.d(LOG_TAG, "URL connected") ;
+
+                // URL popularUrl = new URL(popularUri.toString()) ;
 
 //                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 //                if(sharedPreferences.getString(getString(R.string.movies_pref_key), getString(R.string.popular_sort))
@@ -101,12 +105,9 @@ public class FragmentTopRated extends Fragment {
 
 //                else if(sharedPreferences.getString(getString(R.string.movies_pref_key), getString(R.string.top_rated_sort))
 //                        .equals(getString(R.string.top_rated_label))){
-                    urlConnection = (HttpURLConnection)topUrl.openConnection() ;
+
               //  }
 
-
-                urlConnection.connect();
-                Log.d(LOG_TAG, "URL connected") ;
 
                 InputStream inputStream = urlConnection.getInputStream() ;
 
@@ -134,6 +135,8 @@ public class FragmentTopRated extends Fragment {
                 final String ADULT = "adult" ;
                 final String RELEASE = "release_date" ;
                 final String VOTE = "vote_average" ;
+
+                List<MoviePage> moviePageArrayListTop ;
 
                 try{
 
