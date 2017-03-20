@@ -53,6 +53,7 @@ public class HomeActivity extends AppCompatActivity implements ActionBar.TabList
         viewPager = (ViewPager)findViewById(R.id.viewPager) ;
         tabAdapter = new TabAdapter(getSupportFragmentManager());
         actionBar = getSupportActionBar() ;
+        actionBar.setHomeAsUpIndicator(getResources().getDrawable(R.drawable.themoviesdblogo));
         viewPager.setAdapter(tabAdapter);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         viewPager.setOffscreenPageLimit(3);
