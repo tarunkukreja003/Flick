@@ -461,7 +461,7 @@ public class HomeActivity extends AppCompatActivity implements ActionBar.TabList
 //                    .equals(getString(R.string.popular_label))) {
 //
 //
-//                new MoviesDB().execute("http://api.themoviedb.org/3/movie/popular?api_key=aaffe5cad18de82872dc777a55d9ac51");
+//                new MoviesDB().execute("http://api.themoviedb.org/3/movie/popular?api_key=My Key");
 //            }
 //
 //            else if(sharedPreferences.getString(getString(R.string.movies_pref_key), getString(R.string.top_rated_sort))
@@ -469,7 +469,7 @@ public class HomeActivity extends AppCompatActivity implements ActionBar.TabList
 //
 //
 //
-//             //   .execute("https://api.themoviedb.org/3/movie/top_rated?api_key=aaffe5cad18de82872dc777a55d9ac51");
+//             //   .execute("https://api.themoviedb.org/3/movie/top_rated?api_key=My key");
 //            }
 //
 //            else{
