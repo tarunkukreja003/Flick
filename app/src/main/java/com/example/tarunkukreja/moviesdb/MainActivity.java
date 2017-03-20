@@ -351,7 +351,7 @@ public class MainActivity extends AppCompatActivity {
 //    public boolean onOptionsItemSelected(MenuItem item) {
 //        if(item.getItemId() == R.id.action_refresh){
 //            Log.d(LOG_TAG, "onRefresh") ;
-//            new MoviesDB().execute("http://api.themoviedb.org/3/movie/popular?api_key=aaffe5cad18de82872dc777a55d9ac51");
+//            new MoviesDB().execute("http://api.themoviedb.org/3/movie/popular?api_key=My Key");
 //            return true ;
 //
 //
