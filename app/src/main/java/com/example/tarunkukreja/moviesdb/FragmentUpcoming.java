@@ -1,5 +1,6 @@
 package com.example.tarunkukreja.moviesdb;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -43,12 +44,15 @@ public class FragmentUpcoming extends Fragment {
 
     GridView gridViewUpcoming;
 
+    private ProgressDialog progressDialog ;
+
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_upcoming, container, false);
         gridViewUpcoming = (GridView) view.findViewById(R.id.gridView_upcoming);
+        new MoviesUpcoming().execute("http://api.themoviedb.org/3/movie/upcoming?api_key=" + BuildConfig.MOVIESDB_API_KEY) ;
 
         return view;
     }
@@ -216,8 +220,21 @@ public class FragmentUpcoming extends Fragment {
         }
 
         @Override
+        protected void onPreExecute() {
+
+
+            progressDialog = new ProgressDialog(getActivity(), R.style.ProgressDialogTheme);
+            progressDialog.create();
+            progressDialog.setMessage("Loading");
+            progressDialog.show();
+            super.onPreExecute();
+        }
+        @Override
         protected void onPostExecute(final List<MoviePage> res) {
             Log.d(LOG_TAG, "onPostExecute called");
+
+
+            progressDialog.dismiss();
             super.onPostExecute(res);
 
             MovieAdapter movieAdapter = new MovieAdapter(getActivity(), R.layout.row, res);

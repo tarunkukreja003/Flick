@@ -1,5 +1,6 @@
 package com.example.tarunkukreja.moviesdb;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -42,14 +43,15 @@ public class FragmentTopRated extends Fragment {
 
 
    GridView  gridViewNowPlaying ;
-
-
-
+    private ProgressDialog progressDialog ;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_top_rated, container, false) ;
         gridViewNowPlaying = (GridView)view.findViewById(R.id.gridView_top) ;
+
+
+        new MoviesTopRated().execute("http://api.themoviedb.org/3/movie/now_playing?api_key=" + BuildConfig.MOVIESDB_API_KEY);
 
         return view ;
     }
@@ -220,8 +222,19 @@ public class FragmentTopRated extends Fragment {
         }
 
         @Override
+        protected void onPreExecute() {
+
+            progressDialog = new ProgressDialog(getActivity(), R.style.ProgressDialogTheme) ;
+            progressDialog.create();
+            progressDialog.setMessage("Loading");
+            progressDialog.show();
+            super.onPreExecute();
+        }
+
+        @Override
         protected void onPostExecute(final List<MoviePage> res) {
             Log.d(LOG_TAG, "onPostExecute called") ;
+            progressDialog.dismiss();
             super.onPostExecute(res);
 
             MovieAdapter movieAdapter = new MovieAdapter(getActivity(), R.layout.row, res);

@@ -1,5 +1,6 @@
 package com.example.tarunkukreja.moviesdb;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -40,6 +41,7 @@ public class FragmentPopular extends Fragment {
     Uri popularUri = null ;
 
     GridView gridView ;
+    private ProgressDialog progressDialog ;
 
 
     @Nullable
@@ -49,6 +51,8 @@ public class FragmentPopular extends Fragment {
        View view = inflater.inflate(R.layout.fragment_popular, container, false) ;
 
        gridView = (GridView)view.findViewById(R.id.gridView_pop);
+
+        new MoviesPop().execute("http://api.themoviedb.org/3/movie/popular?api_key=" + BuildConfig.MOVIESDB_API_KEY) ;
 
         return view ;
 
@@ -225,8 +229,22 @@ public class FragmentPopular extends Fragment {
         }
 
         @Override
+        protected void onPreExecute() {
+
+
+            progressDialog = new ProgressDialog(getActivity(), R.style.ProgressDialogTheme) ;
+            progressDialog.create();
+            progressDialog.setMessage("Loading");
+            progressDialog.show();
+            super.onPreExecute();
+        }
+
+        @Override
         protected void onPostExecute(final List<MoviePage> res) {
             Log.d(LOG_TAG, "onPostExecute called") ;
+
+
+            progressDialog.dismiss();
             super.onPostExecute(res);
 
             MovieAdapter movieAdapter = new MovieAdapter(getActivity(), R.layout.row, res);

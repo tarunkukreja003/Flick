@@ -14,4 +14,9 @@
         <item name="android:background">@color/splashBack</item>
     </style>
 
+    <style name="ProgressDialogTheme" parent="Base.ThemeOverlay.AppCompat.Dialog.Alert">
+        <item name="android:elevation">6dp</item>
+        <item name="android:color">@color/colorPrimaryDark</item>
+    </style>
+
 </resources>
