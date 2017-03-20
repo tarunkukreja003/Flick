@@ -270,7 +270,7 @@ public class FragmentPopular extends Fragment {
         if(item.getItemId() == R.id.action_refresh) {
             Log.d(LOG_TAG, "onRefresh");
 
-            new MoviesPop().execute("http://api.themoviedb.org/3/movie/popular?api_key=aaffe5cad18de82872dc777a55d9ac51");
+            new MoviesPop().execute("http://api.themoviedb.org/3/movie/popular?api_key=API KEY");
             return true;
         }
 
