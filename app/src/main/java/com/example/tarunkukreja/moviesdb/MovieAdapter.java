@@ -97,8 +97,18 @@ public class MovieAdapter extends ArrayAdapter<MoviePage> {
            @Override
            public void onClick(View v) {
                String storyline = pos1.getOverview();
+               String language = pos1.getLanguage() ;
+               float pos1Rating = pos1.getRating() ;
+               String pos1Title = pos1.getTitle() ;
+               boolean pos1Adult = pos1.isAdult() ;
+               String pos1Release = pos1.getRelease() ;
                Bundle args = new Bundle();
                args.putString("Overview", storyline);
+               args.putString("Title", pos1Title);
+               args.putString("release", pos1Release);
+               args.putBoolean("isAdult", pos1Adult);
+               args.putFloat("rating", pos1Rating);
+               args.putString("language", language);
 
                Intent intent = new Intent(getContext(), DetailActivity.class);
                intent.putExtras(args);
