@@ -356,8 +356,8 @@ public class FragmentPopular extends Fragment {
 
         if(item.getItemId() == R.id.action_refresh) {
             Log.d(LOG_TAG, "onRefresh");
+        new MoviesPop().execute("http://api.themoviedb.org/3/movie/popular?api_key=" + BuildConfig.MOVIESDB_API_KEY);
 
-            new MoviesPop().execute("http://api.themoviedb.org/3/movie/popular?api_key=" + BuildConfig.MOVIESDB_API_KEY);
             return true;
         }
 

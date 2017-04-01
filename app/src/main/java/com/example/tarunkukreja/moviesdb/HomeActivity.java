@@ -485,15 +485,6 @@ public class HomeActivity extends AppCompatActivity implements ActionBar.TabList
 //                    .equals(getString(R.string.popular_label))) {
 //
 //
-//                new MoviesDB().execute("http://api.themoviedb.org/3/movie/popular?api_key=");
-//            }
-//
-//            else if(sharedPreferences.getString(getString(R.string.movies_pref_key), getString(R.string.top_rated_sort))
-//                .equals(getString(R.string.top_rated_label))){
-//
-//
-//
-//             //   .execute("https://api.themoviedb.org/3/movie/top_rated?api_key=");
 //            }
 //
 //            else{

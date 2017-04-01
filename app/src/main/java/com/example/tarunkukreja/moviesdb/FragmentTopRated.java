@@ -278,7 +278,9 @@ public class FragmentTopRated extends Fragment {
         if(item.getItemId() == R.id.action_refresh) {
             Log.d(LOG_TAG, "onRefresh");
 
+
             new MoviesTopRated().execute("http://api.themoviedb.org/3/movie/now_playing?api_key=" + BuildConfig.MOVIESDB_API_KEY);
+
             return true;
         }
 
