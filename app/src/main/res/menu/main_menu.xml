@@ -6,4 +6,11 @@
         android:title="Refresh"
         app:showAsAction="never"/>
 
+    <item android:title="Search"
+        android:icon="@drawable/ic_search_white_24dp"
+        app:showAsAction="collapseActionView|always"
+        android:id="@+id/search_view"
+        android:actionViewClass="android.widget.SearchView"/>
+
+
 </menu>

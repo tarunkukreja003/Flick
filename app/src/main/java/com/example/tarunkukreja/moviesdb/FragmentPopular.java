@@ -1,12 +1,14 @@
 package com.example.tarunkukreja.moviesdb;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -14,8 +16,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.GridView;
+import android.widget.SearchView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -40,8 +41,17 @@ public class FragmentPopular extends Fragment {
     private static final String LOG_TAG = FragmentPopular.class.getSimpleName() ;
     Uri popularUri = null ;
 
-    GridView gridView ;
+   // GridView gridView ;
+
+    RecyclerView recyclerView ;
+    RecyclerView.LayoutManager grid ;
+
+    SwipeRefreshLayout swipeRefreshLayout ;
     private ProgressDialog progressDialog ;
+    private SearchView searchView;
+    private MenuItem searchMenuItem;
+    private MovieAdapter movieAdapter ;
+   // WindowManager windowManager ;
 
 
     @Nullable
@@ -50,9 +60,27 @@ public class FragmentPopular extends Fragment {
 
        View view = inflater.inflate(R.layout.fragment_popular, container, false) ;
 
-       gridView = (GridView)view.findViewById(R.id.gridView_pop);
+       swipeRefreshLayout =(SwipeRefreshLayout)view.findViewById(R.id.swipe_refresh) ;
+      // gridView = (GridView)view.findViewById(R.id.gridView_pop);
+        recyclerView = (RecyclerView)view.findViewById(R.id.recycler_pop);
+
+//        window = getActivity().getWindow() ;
+      //  int height = windowManager.getDefaultDisplay().getHeight() ;
+       // int height =  window.getAttributes().y ;
+
+        grid = new GridLayoutManager(getActivity(), 2);
+      //  view.setLayoutParams(new GridLayoutManager.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int)(height/2.5)));
 
         new MoviesPop().execute("http://api.themoviedb.org/3/movie/popular?api_key=" + BuildConfig.MOVIESDB_API_KEY) ;
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                swipeRefreshLayout.setRefreshing(true);
+                new MoviesPop().execute("http://api.themoviedb.org/3/movie/popular?api_key=" + BuildConfig.MOVIESDB_API_KEY) ;
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
 
         return view ;
 
@@ -68,6 +96,18 @@ public class FragmentPopular extends Fragment {
         setHasOptionsMenu(true);
 
     }
+
+//    @Override
+//    public boolean onQueryTextSubmit(String query) {
+//        return false;
+//    }
+//
+//    @Override
+//    public boolean onQueryTextChange(String newText) {
+//
+//        //movieAdapter_search.getFilter().filter(newText);
+//        return true;
+//    }
 
     private class MoviesPop extends AsyncTask<String, String, List<MoviePage>>{
 
@@ -144,7 +184,7 @@ public class FragmentPopular extends Fragment {
                 final String ADULT = "adult" ;
                 final String RELEASE = "release_date" ;
                 final String VOTE = "vote_average" ;
-
+                final String MOV_ID = "id" ;
                 List<MoviePage> moviePageArrayList ;
 
                 try{
@@ -160,7 +200,7 @@ public class FragmentPopular extends Fragment {
 
                         StringBuffer moviePosterUrl = null;
                         moviePosterUrl = new StringBuffer() ;
-                        moviePosterUrl.append("https://image.tmdb.org/t/p/w342/");
+                        moviePosterUrl.append("https://image.tmdb.org/t/p/w500/");
                         moviePage = new MoviePage();
 
                         JSONObject subObj = moviesArray.getJSONObject(i);
@@ -171,6 +211,7 @@ public class FragmentPopular extends Fragment {
                         String release_date = subObj.getString(RELEASE) ;
                         boolean adult_or_not = subObj.getBoolean(ADULT) ;
                         float vote = subObj.getInt(VOTE) ;
+                        long movId = subObj.getLong(MOV_ID) ;
 
 
                         moviePosterUrl.append(image);
@@ -184,6 +225,7 @@ public class FragmentPopular extends Fragment {
                         moviePage.setAdult(adult_or_not);
                         moviePage.setRelease(release_date);
                         moviePage.setRating(vote);
+                        moviePage.setId(movId);
 
 
                         moviePageArrayList.add(i, moviePage);
@@ -247,27 +289,43 @@ public class FragmentPopular extends Fragment {
             progressDialog.dismiss();
             super.onPostExecute(res);
 
-            MovieAdapter movieAdapter = new MovieAdapter(getActivity(), R.layout.row, res);
-            gridView.setAdapter(movieAdapter) ;
+            MovieAdapter movieAdapter = new MovieAdapter(res);
+            recyclerView.setLayoutManager(grid);
+             recyclerView.setAdapter(movieAdapter);
+//            gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//                @Override
+//                public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+//
+//                    Log.d(LOG_TAG, "Item Clicked") ;
+//
+//                    //  MoviePage pos = res.get(position) ;
+//                    MoviePage pos1 = res.get(position);
+//                    String storyline = pos1.getOverview() ;
+//                    Bundle args = new Bundle() ;
+//                    args.putString("Overview", storyline);
+//
+//                    Intent intent = new Intent(getActivity(), DetailActivity.class) ;
+//                    intent.putExtras(args) ;
+//                    startActivity(intent);
+//
+//                }
+//            });
 
-            gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-
-                    Log.d(LOG_TAG, "Item Clicked") ;
-
-                    //  MoviePage pos = res.get(position) ;
-                    MoviePage pos1 = res.get(position);
-                    String storyline = pos1.getOverview() ;
-                    Bundle args = new Bundle() ;
-                    args.putString("Overview", storyline);
-
-                    Intent intent = new Intent(getActivity(), DetailActivity.class) ;
-                    intent.putExtras(args) ;
-                    startActivity(intent);
-
-                }
-            });
+//            gridView.setOnScrollListener(new AbsListView.OnScrollListener() {
+//                @Override
+//                public void onScrollStateChanged(AbsListView view, int scrollState) {
+//
+//                }
+//
+//                @Override
+//                public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+//                 if(firstVisibleItem == 0){
+//                     swipeRefreshLayout.setEnabled(true);
+//                 }else{
+//                     swipeRefreshLayout.setEnabled(false);
+//                 }
+//                }
+//            });
 
 
 
@@ -280,6 +338,17 @@ public class FragmentPopular extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.main_menu, menu);
 
+//        SearchManager searchManager = (SearchManager)getActivity().getSystemService(Context.SEARCH_SERVICE) ;
+//       // searchView = (SearchView)getActivity().findViewById(R.id.search_view) ;
+//        searchMenuItem = menu.findItem(R.id.search_view) ;
+//        searchView = (SearchView)searchMenuItem.getActionView() ;
+//
+//        searchView.setSearchableInfo(searchManager.
+//                getSearchableInfo(getActivity().getComponentName()));
+//        searchView.setSubmitButtonEnabled(true);
+//        searchView.setOnQueryTextListener(this);
+
+        //return true ;
     }
 
     @Override

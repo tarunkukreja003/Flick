@@ -13,9 +13,15 @@ public class MoviePage {
     private String release ;
     private boolean adult ;
     private float rating ;
+    private long id ;
 
+    public void setId(long id) {
+        this.id = id;
+    }
 
-
+    public long getId() {
+        return id;
+    }
 
     public void setRating(float rating) {
         this.rating = rating;

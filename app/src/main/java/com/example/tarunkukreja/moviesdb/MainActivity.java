@@ -1,10 +1,16 @@
 package com.example.tarunkukreja.moviesdb;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -15,10 +21,19 @@ public class MainActivity extends AppCompatActivity {
 //    GridView listView;
 //
 //    List<MoviePage> moviePageArrayList ;
-    private static final int SPLASH_TIME = 5000 ;
+    private static final int SPLASH_TIME = 2000 ;
 //    RecyclerView recyclerView ;
 //    RecyclerView.LayoutManager grigLayoutManager ;
 //    RecyclerView.Adapter adapter ;
+    ProgressBar progressBar ;
+    Handler handler ;
+
+
+
+
+
+
+
 
 
     @Override
@@ -28,30 +43,53 @@ public class MainActivity extends AppCompatActivity {
         setTheme(R.style.SplashTheme);
         setContentView(R.layout.activity_main);
 
-        new Handler().postDelayed(new Runnable() {
+        progressBar = (ProgressBar)findViewById(R.id.progress_bar_splash) ;
+        handler = new Handler() ;
+      //  progressBar.setVisibility(View.VISIBLE);
+        new Thread() {
             @Override
             public void run() {
+                Log.d(LOG_TAG, "thread in run") ;
+                ConnectivityManager connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE) ;
+                NetworkInfo networkInfo =  connectivityManager.getActiveNetworkInfo() ;
+                //  final android.net.NetworkInfo mobile = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE) ;
 
-                Intent homeIntent = new Intent(MainActivity.this, HomeActivity.class) ;
-                startActivity(homeIntent);
+                if(networkInfo!=null && networkInfo.isConnected()){
 
+                    Log.d(LOG_TAG, "Network Available") ;
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                          //  progressBar.setVisibility(View.GONE);
+                            Intent homeIntent = new Intent(MainActivity.this, HomeActivity.class) ;
+                            startActivity(homeIntent);
+                            finish();
+                        }
+                    }, SPLASH_TIME) ;
+                    //progressBar.setVisibility(View.GONE);
+
+                }
+                else{
+                    progressBar.setVisibility(View.VISIBLE);
+                    Toast.makeText(MainActivity.this, "Check Your Internet Connection", Toast.LENGTH_SHORT).show();
+                }
+               // handler.sendEmptyMessage(0);
             }
-        }, SPLASH_TIME) ;
+        }.start();
 
 //        listView = (GridView)findViewById(listView) ;
 //        recyclerView = (RecyclerView)findViewById(R.id.listView) ;
 //        grigLayoutManager = new GridLayoutManager(MainActivity.this, 2) ;
 //        recyclerView.setLayoutManager(grigLayoutManager);
-
-
-
-
-
-
-
-
-
     }
+//
+//    public class InternetReciever extends BroadcastReceiver{
+//
+//        @Override
+//        public void onReceive(Context context, Intent intent) {
+//
+//        }
+//    }
 
 
 

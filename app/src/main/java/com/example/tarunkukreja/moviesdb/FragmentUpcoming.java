@@ -1,12 +1,13 @@
 package com.example.tarunkukreja.moviesdb;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -14,8 +15,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.GridView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -42,8 +41,9 @@ public class FragmentUpcoming extends Fragment {
     Uri UpcomingUri = null;
 
 
-    GridView gridViewUpcoming;
-
+  //  GridView gridViewUpcoming;
+    RecyclerView recyclerView ;
+    RecyclerView.LayoutManager grid ;
     private ProgressDialog progressDialog ;
 
 
@@ -51,7 +51,9 @@ public class FragmentUpcoming extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_upcoming, container, false);
-        gridViewUpcoming = (GridView) view.findViewById(R.id.gridView_upcoming);
+        //gridViewUpcoming = (GridView) view.findViewById(R.id.gridView_upcoming);
+        recyclerView = (RecyclerView)view.findViewById(R.id.recycler_upcoming) ;
+        grid = new GridLayoutManager(getActivity(), 2);
         new MoviesUpcoming().execute("http://api.themoviedb.org/3/movie/upcoming?api_key=" + BuildConfig.MOVIESDB_API_KEY) ;
 
         return view;
@@ -237,27 +239,27 @@ public class FragmentUpcoming extends Fragment {
             progressDialog.dismiss();
             super.onPostExecute(res);
 
-            MovieAdapter movieAdapter = new MovieAdapter(getActivity(), R.layout.row, res);
-            gridViewUpcoming.setAdapter(movieAdapter);
-
-            gridViewUpcoming.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-
-                    Log.d(LOG_TAG, "Item Clicked");
-
-                    //  MoviePage pos = res.get(position) ;
-                    MoviePage pos1 = (MoviePage) parent.getItemAtPosition(position);
-                    String storyline = pos1.getOverview();
-                    Bundle args = new Bundle();
-                    args.putString("Overview", storyline);
-
-                    Intent intent = new Intent(getActivity(), DetailActivity.class);
-                    intent.putExtras(args);
-                    startActivity(intent);
-
-                }
-            });
+            MovieAdapter movieAdapter = new MovieAdapter(res);
+            recyclerView.setLayoutManager(grid);
+            recyclerView.setAdapter(movieAdapter);
+//            gridViewUpcoming.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//                @Override
+//                public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+//
+//                    Log.d(LOG_TAG, "Item Clicked");
+//
+//                    //  MoviePage pos = res.get(position) ;
+//                    MoviePage pos1 = (MoviePage) parent.getItemAtPosition(position);
+//                    String storyline = pos1.getOverview();
+//                    Bundle args = new Bundle();
+//                    args.putString("Overview", storyline);
+//
+//                    Intent intent = new Intent(getActivity(), DetailActivity.class);
+//                    intent.putExtras(args);
+//                    startActivity(intent);
+//
+//                }
+//            });
 
 
         }

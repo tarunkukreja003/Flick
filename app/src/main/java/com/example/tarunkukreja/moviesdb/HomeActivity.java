@@ -5,10 +5,13 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Window;
+import android.view.WindowManager;
 
 /**
  * Created by tarunkukreja on 18/03/17.
@@ -50,6 +53,19 @@ public class HomeActivity extends AppCompatActivity implements ActionBar.TabList
 //        recyclerView = (RecyclerView)findViewById(R.id.listView) ;
 //        grigLayoutManager = new GridLayoutManager(MainActivity.this, 2) ;
 //        recyclerView.setLayoutManager(grigLayoutManager);
+
+        Window window = this.getWindow();
+
+// clear FLAG_TRANSLUCENT_STATUS flag:
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+
+// add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+
+// finally change the color
+        window.setStatusBarColor(ContextCompat.getColor(this,R.color.colorPrimary));
+
+
         viewPager = (ViewPager)findViewById(R.id.viewPager) ;
         tabAdapter = new TabAdapter(getSupportFragmentManager());
         actionBar = getSupportActionBar() ;

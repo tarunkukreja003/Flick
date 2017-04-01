@@ -1,28 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-
-    <ImageView
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:src="@mipmap/ic_launcher"
-        android:id="@+id/image_view_detail"
-        android:layout_gravity="center"
-        android:layout_marginBottom="16dp"/>
+        android:elevation="6dp"
+        android:background="@color/colorPrimary">
 
+        <TextView
+            android:id="@+id/detail_movie_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="16dp"
+            android:gravity="center"
+            android:text="Title"
+            android:textColor="@color/detail_title"
+            android:textSize="25sp" />
 
-    <TextView
-        android:layout_width="wrap_content"
+    </android.support.v7.widget.Toolbar>
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Title"
-        android:id="@+id/detail_movie_title"
-        android:layout_gravity="center"
-        android:layout_marginBottom="16dp"
-        android:textSize="30sp"/>
+        android:orientation="vertical"
+        android:background="@color/colorAccent">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="1"
+        android:clipToPadding="false">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        card_view:cardElevation="@dimen/activity_horizontal_margin"
+        android:layout_weight=".4"
+        >
+        <ImageView
+            android:id="@+id/image_view_detail"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@mipmap/ic_launcher"
+            android:scaleType="fitXY"
+            android:background="@color/colorAccent"/>
+
+    </android.support.v7.widget.CardView>
+
+        <LinearLayout
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:orientation="vertical"
+          android:layout_marginTop="20dp"
+          android:layout_weight=".6">
+
+          <TextView
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:id="@+id/genre1"
+              android:layout_gravity="center"
+              android:layout_marginBottom="10dp"
+              android:text="Genre1, Genre2, Genre3"
+              android:textColor="@color/detail_title"
+              android:textSize="16sp"
+              android:textStyle="italic"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -30,39 +79,78 @@
         android:id="@+id/detail_adult"
         android:layout_gravity="center"
         android:text="Adult"
-        android:layout_marginBottom="8dp"
-        android:textSize="20sp"/>
+        android:layout_marginBottom="10dp"
+        android:textColor="@color/detail_title"
+        android:textSize="20sp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Language"
         android:id="@+id/detail_lang"
+        android:layout_marginBottom="10dp"
         android:layout_gravity="center"
-        android:layout_marginBottom="16dp"
-        android:textSize="20sp"/>
+        android:textColor="@color/detail_title"
+        android:textSize="20sp" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="overview"
-        android:layout_gravity="center"
-        android:id="@+id/detail_overview"/>
+
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="release"
-        android:id="@+id/detail_release"/>
+        android:layout_marginBottom="10dp"
+        android:id="@+id/detail_release"
+        android:textColor="@color/detail_title"
+        android:textSize="20sp"/>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Runtime"
+        android:textStyle="italic|bold"
+        android:layout_gravity="center"
+        android:textSize="20sp"
+        android:textColor="@color/detail_title"
+        android:id="@+id/detail_duration"/>
+
+
+      </LinearLayout>
+
+
+    </LinearLayout>
     <RatingBar
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:numStars="5"
         android:id="@+id/detail_rating"
-        android:focusable="true"
+        android:layout_marginTop="16dp"
         />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="overview"
+        android:layout_gravity="center"
+        android:padding="10dp"
+        android:textSize="14sp"
+        android:textColor="@color/detail_title"
+        android:id="@+id/detail_overview"/>
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:id="@+id/trailerLinearLayout">
+
+        </LinearLayout>
+    </ScrollView>
+    </LinearLayout>
 
 </LinearLayout>

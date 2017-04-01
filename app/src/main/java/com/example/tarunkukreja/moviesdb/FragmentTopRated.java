@@ -1,12 +1,13 @@
 package com.example.tarunkukreja.moviesdb;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -14,8 +15,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.GridView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -42,15 +41,17 @@ public class FragmentTopRated extends Fragment {
     Uri nowPlayingUri = null ;
 
 
-   GridView  gridViewNowPlaying ;
+  // GridView  gridViewNowPlaying ;
+    RecyclerView recyclerView ;
+    RecyclerView.LayoutManager grid ;
     private ProgressDialog progressDialog ;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_top_rated, container, false) ;
-        gridViewNowPlaying = (GridView)view.findViewById(R.id.gridView_top) ;
-
-
+      //  gridViewNowPlaying = (GridView)view.findViewById(R.id.gridView_top) ;
+        recyclerView = (RecyclerView)view.findViewById(R.id.recycler_top) ;
+        grid = new GridLayoutManager(getActivity(), 2);
         new MoviesTopRated().execute("http://api.themoviedb.org/3/movie/now_playing?api_key=" + BuildConfig.MOVIESDB_API_KEY);
 
         return view ;
@@ -237,27 +238,28 @@ public class FragmentTopRated extends Fragment {
             progressDialog.dismiss();
             super.onPostExecute(res);
 
-            MovieAdapter movieAdapter = new MovieAdapter(getActivity(), R.layout.row, res);
-            gridViewNowPlaying.setAdapter(movieAdapter);
+            MovieAdapter movieAdapter = new MovieAdapter(res);
+            recyclerView.setLayoutManager(grid);
+            recyclerView.setAdapter(movieAdapter);
 
-            gridViewNowPlaying.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-
-                    Log.d(LOG_TAG, "Item Clicked") ;
-
-                    //  MoviePage pos = res.get(position) ;
-                    MoviePage pos1 = (MoviePage)parent.getItemAtPosition(position) ;
-                    String storyline = pos1.getOverview() ;
-                    Bundle args = new Bundle() ;
-                    args.putString("Overview", storyline);
-
-                    Intent intent = new Intent(getActivity(), DetailActivity.class) ;
-                    intent.putExtras(args) ;
-                    startActivity(intent);
-
-                }
-            });
+//            gridViewNowPlaying.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//                @Override
+//                public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+//
+//                    Log.d(LOG_TAG, "Item Clicked") ;
+//
+//                    //  MoviePage pos = res.get(position) ;
+//                    MoviePage pos1 = (MoviePage)parent.getItemAtPosition(position) ;
+//                    String storyline = pos1.getOverview() ;
+//                    Bundle args = new Bundle() ;
+//                    args.putString("Overview", storyline);
+//
+//                    Intent intent = new Intent(getActivity(), DetailActivity.class) ;
+//                    intent.putExtras(args) ;
+//                    startActivity(intent);
+//
+//                }
+//            });
 
 
 
