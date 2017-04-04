@@ -2,6 +2,7 @@ package com.example.tarunkukreja.moviesdb;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -29,7 +30,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder
    // LayoutInflater inflater ;
     //CardView cardView ;
     Context context ;
-
+    Typeface roboto ;
 
     public MovieAdapter(List<MoviePage> objects) {
        // super(objects);
@@ -112,6 +113,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
+
 
         holder.title.setText(moviePageList.get(position).getTitle());
         String url = moviePageList.get(position).getImage();
@@ -208,6 +210,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder
             //   holder.language = (TextView) convertView.findViewById(R.id.lang);
             // holder.overview = (TextView) convertView.findViewById(R.id.overview);
             imageView = (ImageView) view.findViewById(R.id.image_view);
+            roboto = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto 500.ttf") ;
             //        holder.adult = (TextView)convertView.findViewById(R.id.adult) ;
             //          holder.ratingBar = (RatingBar)convertView.findViewById(R.id.rating);
 //            holder.id = (TextView)convertView.findViewById(R.id.mov_id) ;

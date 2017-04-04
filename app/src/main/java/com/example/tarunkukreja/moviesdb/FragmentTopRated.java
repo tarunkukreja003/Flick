@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -38,22 +39,32 @@ public class FragmentTopRated extends Fragment {
 
     private static final String LOG_TAG = FragmentTopRated.class.getSimpleName() ;
    // Uri popularUri = null ;
-    Uri nowPlayingUri = null ;
+    private Uri nowPlayingUri = null ;
 
 
   // GridView  gridViewNowPlaying ;
-    RecyclerView recyclerView ;
-    RecyclerView.LayoutManager grid ;
+    private SwipeRefreshLayout swipeRefreshLayout ;
+    private RecyclerView recyclerView ;
+    private RecyclerView.LayoutManager grid ;
     private ProgressDialog progressDialog ;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_top_rated, container, false) ;
       //  gridViewNowPlaying = (GridView)view.findViewById(R.id.gridView_top) ;
+        swipeRefreshLayout =(SwipeRefreshLayout)view.findViewById(R.id.swipe_refresh_top) ;
         recyclerView = (RecyclerView)view.findViewById(R.id.recycler_top) ;
         grid = new GridLayoutManager(getActivity(), 2);
         new MoviesTopRated().execute("http://api.themoviedb.org/3/movie/now_playing?api_key=" + BuildConfig.MOVIESDB_API_KEY);
 
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                swipeRefreshLayout.setRefreshing(true);
+                new MoviesTopRated().execute("http://api.themoviedb.org/3/movie/now_playing?api_key=" + BuildConfig.MOVIESDB_API_KEY) ;
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
         return view ;
     }
 
@@ -79,7 +90,7 @@ public class FragmentTopRated extends Fragment {
 
 
             try {
-                String baseUrl = "http://api.themoviedb.org/3/movie/now_playing?" ;
+                String baseUrl = "http://api.themoviedb.org/3/movie/now_playing" ;
               //  final String popular_sort = "popular" ;
                // final String top_rated_sort = "top_rated" ;
 
@@ -138,7 +149,7 @@ public class FragmentTopRated extends Fragment {
                 final String ADULT = "adult" ;
                 final String RELEASE = "release_date" ;
                 final String VOTE = "vote_average" ;
-
+                final String MOV_ID = "id" ;
                 List<MoviePage> moviePageArrayListPlaying ;
 
                 try{
@@ -154,7 +165,7 @@ public class FragmentTopRated extends Fragment {
 
                         StringBuffer moviePosterUrl = null;
                         moviePosterUrl = new StringBuffer() ;
-                        moviePosterUrl.append("https://image.tmdb.org/t/p/w342/");
+                        moviePosterUrl.append("https://image.tmdb.org/t/p/w500/");
                         moviePage = new MoviePage();
 
                         JSONObject subObj = moviesArray.getJSONObject(i);
@@ -165,7 +176,7 @@ public class FragmentTopRated extends Fragment {
                         String release_date = subObj.getString(RELEASE) ;
                         boolean adult_or_not = subObj.getBoolean(ADULT) ;
                         float vote = subObj.getInt(VOTE) ;
-
+                        long movId = subObj.getLong(MOV_ID);
 
                         moviePosterUrl.append(image);
                         String posterUrl = moviePosterUrl.toString();
@@ -178,7 +189,7 @@ public class FragmentTopRated extends Fragment {
                         moviePage.setAdult(adult_or_not);
                         moviePage.setRelease(release_date);
                         moviePage.setRating(vote);
-
+                        moviePage.setId(movId);
 
                         moviePageArrayListPlaying.add(i, moviePage);
                         Log.d(LOG_TAG, "Insertion" + i + "done");
@@ -240,8 +251,9 @@ public class FragmentTopRated extends Fragment {
 
             MovieAdapter movieAdapter = new MovieAdapter(res);
             recyclerView.setLayoutManager(grid);
+            Log.d(LOG_TAG, "Now_Playing Layout Manager set") ;
             recyclerView.setAdapter(movieAdapter);
-
+            Log.d(LOG_TAG, "Now_Playing adapter set") ;
 //            gridViewNowPlaying.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 //                @Override
 //                public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {

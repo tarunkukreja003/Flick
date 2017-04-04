@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MoviesDB</string>
+    <string name="app_name">Flick</string>
     <string name="movies_pref_key">sort</string>
     <string name="popular_sort">popular</string>
     <string name="popular_label">Popular</string>

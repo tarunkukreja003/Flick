@@ -43,10 +43,10 @@ public class FragmentPopular extends Fragment {
 
    // GridView gridView ;
 
-    RecyclerView recyclerView ;
-    RecyclerView.LayoutManager grid ;
+    private RecyclerView recyclerView ;
+    private RecyclerView.LayoutManager grid ;
 
-    SwipeRefreshLayout swipeRefreshLayout ;
+    private SwipeRefreshLayout swipeRefreshLayout ;
     private ProgressDialog progressDialog ;
     private SearchView searchView;
     private MenuItem searchMenuItem;
@@ -123,7 +123,7 @@ public class FragmentPopular extends Fragment {
 
 
             try {
-                String baseUrl = "http://api.themoviedb.org/3/movie/popular?" ;
+                String baseUrl = "http://api.themoviedb.org/3/movie/popular" ;
               //  final String popular_sort = "popular" ;
                 //final String top_rated_sort = "top_rated" ;
 
@@ -176,6 +176,7 @@ public class FragmentPopular extends Fragment {
 
                 moviesJsonStr = stringBuffer.toString() ;
 
+                final String PAGES = "total_pages" ;
                 final String RESULTS = "results" ;
                 final String OVERVIEW = "overview" ;
                 final String TITLE = "title" ;
@@ -187,57 +188,61 @@ public class FragmentPopular extends Fragment {
                 final String MOV_ID = "id" ;
                 List<MoviePage> moviePageArrayList ;
 
-                try{
+                try {
 
-                    JSONObject mainObj = new JSONObject(moviesJsonStr) ;
-                    JSONArray moviesArray = mainObj.getJSONArray(RESULTS) ;
+                    JSONObject mainObj = new JSONObject(moviesJsonStr);
+//                    int pages = mainObj.getInt(PAGES);
+//                    Log.d(LOG_TAG, "Pages" + pages) ;
+                    JSONArray moviesArray = mainObj.getJSONArray(RESULTS);
 
-                    MoviePage moviePage ;
+                    MoviePage moviePage;
 
-                    moviePageArrayList = new ArrayList<MoviePage>() ;
+                    moviePageArrayList = new ArrayList<MoviePage>();
 
-                    for(int i=0; i<moviesArray.length(); i++) {
+                        for (int i = 0; i < moviesArray.length(); i++) {
 
-                        StringBuffer moviePosterUrl = null;
-                        moviePosterUrl = new StringBuffer() ;
-                        moviePosterUrl.append("https://image.tmdb.org/t/p/w500/");
-                        moviePage = new MoviePage();
+                            StringBuffer moviePosterUrl = null;
+                            moviePosterUrl = new StringBuffer();
+                            moviePosterUrl.append("https://image.tmdb.org/t/p/w500/");
+                            moviePage = new MoviePage();
 
-                        JSONObject subObj = moviesArray.getJSONObject(i);
-                        String overview = subObj.getString(OVERVIEW);
-                        String lang = subObj.getString(LANGUAGE);
-                        String  title = subObj.getString(TITLE);
-                        String image = subObj.getString(IMAGE) ;
-                        String release_date = subObj.getString(RELEASE) ;
-                        boolean adult_or_not = subObj.getBoolean(ADULT) ;
-                        float vote = subObj.getInt(VOTE) ;
-                        long movId = subObj.getLong(MOV_ID) ;
-
-
-                        moviePosterUrl.append(image);
-                        String posterUrl = moviePosterUrl.toString();
+                            JSONObject subObj = moviesArray.getJSONObject(i);
+                            String overview = subObj.getString(OVERVIEW);
+                            String lang = subObj.getString(LANGUAGE);
+                            String title = subObj.getString(TITLE);
+                            String image = subObj.getString(IMAGE);
+                            String release_date = subObj.getString(RELEASE);
+                            boolean adult_or_not = subObj.getBoolean(ADULT);
+                            float vote = subObj.getInt(VOTE);
+                            long movId = subObj.getLong(MOV_ID);
 
 
-                        moviePage.setTitle(title);
-                        moviePage.setLanguage(lang);
-                        moviePage.setOverview(overview);
-                        moviePage.setImage(posterUrl);
-                        moviePage.setAdult(adult_or_not);
-                        moviePage.setRelease(release_date);
-                        moviePage.setRating(vote);
-                        moviePage.setId(movId);
+                            moviePosterUrl.append(image);
+                            String posterUrl = moviePosterUrl.toString();
 
 
-                        moviePageArrayList.add(i, moviePage);
-                        Log.d(LOG_TAG, "Insertion" + i + "done");
+                            moviePage.setTitle(title);
+                            moviePage.setLanguage(lang);
+                            moviePage.setOverview(overview);
+                            moviePage.setImage(posterUrl);
+                            moviePage.setAdult(adult_or_not);
+                            moviePage.setRelease(release_date);
+                            moviePage.setRating(vote);
+                            moviePage.setId(movId);
+
+
+                            moviePageArrayList.add(i, moviePage);
+                            Log.d(LOG_TAG, "Insertion" + i + "done");
+                        }
+
+                        return moviePageArrayList;
+
+
+                    }catch(JSONException e){
+                        Log.e(LOG_TAG, "Error in JSON");
+                        e.printStackTrace();
                     }
 
-                    return moviePageArrayList;
-
-                }catch (JSONException e){
-                    Log.e(LOG_TAG, "Error in JSON") ;
-                    e.printStackTrace();
-                }
 
 
             } catch (MalformedURLException e) {

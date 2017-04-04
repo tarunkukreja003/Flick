@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -38,12 +39,13 @@ public class FragmentUpcoming extends Fragment {
 
     private static final String LOG_TAG = FragmentUpcoming.class.getSimpleName();
     // Uri popularUri = null ;
-    Uri UpcomingUri = null;
+    private Uri UpcomingUri = null;
 
 
   //  GridView gridViewUpcoming;
-    RecyclerView recyclerView ;
-    RecyclerView.LayoutManager grid ;
+    private SwipeRefreshLayout swipeRefreshLayout ;
+    private RecyclerView recyclerView ;
+    private RecyclerView.LayoutManager grid ;
     private ProgressDialog progressDialog ;
 
 
@@ -52,10 +54,20 @@ public class FragmentUpcoming extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_upcoming, container, false);
         //gridViewUpcoming = (GridView) view.findViewById(R.id.gridView_upcoming);
+
+        swipeRefreshLayout =(SwipeRefreshLayout)view.findViewById(R.id.swipe_refresh_upcoming) ;
         recyclerView = (RecyclerView)view.findViewById(R.id.recycler_upcoming) ;
         grid = new GridLayoutManager(getActivity(), 2);
         new MoviesUpcoming().execute("http://api.themoviedb.org/3/movie/upcoming?api_key=" + BuildConfig.MOVIESDB_API_KEY) ;
 
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                swipeRefreshLayout.setRefreshing(true);
+                new MoviesUpcoming().execute("http://api.themoviedb.org/3/movie/upcoming?api_key=" + BuildConfig.MOVIESDB_API_KEY) ;
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
         return view;
     }
 
@@ -79,7 +91,7 @@ public class FragmentUpcoming extends Fragment {
 
 
             try {
-                String baseUrl = "http://api.themoviedb.org/3/movie/upcoming?";
+                String baseUrl = "http://api.themoviedb.org/3/movie/upcoming";
                 //  final String popular_sort = "popular" ;
                 // final String top_rated_sort = "top_rated" ;
 
@@ -138,6 +150,7 @@ public class FragmentUpcoming extends Fragment {
                 final String ADULT = "adult";
                 final String RELEASE = "release_date";
                 final String VOTE = "vote_average";
+                final String MOV_ID = "id" ;
 
                 List<MoviePage> moviePageArrayListUpcoming;
 
@@ -154,7 +167,7 @@ public class FragmentUpcoming extends Fragment {
 
                         StringBuffer moviePosterUrl = null;
                         moviePosterUrl = new StringBuffer();
-                        moviePosterUrl.append("https://image.tmdb.org/t/p/w342/");
+                        moviePosterUrl.append("https://image.tmdb.org/t/p/w500/");
                         moviePage = new MoviePage();
 
                         JSONObject subObj = moviesArray.getJSONObject(i);
@@ -165,6 +178,7 @@ public class FragmentUpcoming extends Fragment {
                         String release_date = subObj.getString(RELEASE);
                         boolean adult_or_not = subObj.getBoolean(ADULT);
                         float vote = subObj.getInt(VOTE);
+                        long movId = subObj.getLong(MOV_ID);
 
 
                         moviePosterUrl.append(image);
@@ -178,6 +192,7 @@ public class FragmentUpcoming extends Fragment {
                         moviePage.setAdult(adult_or_not);
                         moviePage.setRelease(release_date);
                         moviePage.setRating(vote);
+                        moviePage.setId(movId);
 
 
                         moviePageArrayListUpcoming.add(i, moviePage);
@@ -241,7 +256,9 @@ public class FragmentUpcoming extends Fragment {
 
             MovieAdapter movieAdapter = new MovieAdapter(res);
             recyclerView.setLayoutManager(grid);
+            Log.d(LOG_TAG, "Upcoming Layout Manager set") ;
             recyclerView.setAdapter(movieAdapter);
+            Log.d(LOG_TAG, "Upcoming adapter set") ;
 //            gridViewUpcoming.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 //                @Override
 //                public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {

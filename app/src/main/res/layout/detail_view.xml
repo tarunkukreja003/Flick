@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
@@ -9,15 +14,16 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:elevation="6dp"
-        android:background="@color/colorPrimary">
+        android:elevation="10dp"
+        android:background="@color/colorPrimary"
+        android:weightSum="1">
 
         <TextView
             android:id="@+id/detail_movie_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="16dp"
+            android:layout_margin="16dp"
             android:gravity="center"
             android:text="Title"
             android:textColor="@color/detail_title"
@@ -27,7 +33,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="600dp"
         android:orientation="vertical"
         android:background="@color/colorAccent">
 
@@ -67,7 +73,7 @@
               android:layout_height="wrap_content"
               android:id="@+id/genre1"
               android:layout_gravity="center"
-              android:layout_marginBottom="10dp"
+              android:layout_marginBottom="14dp"
               android:text="Genre1, Genre2, Genre3"
               android:textColor="@color/detail_title"
               android:textSize="16sp"
@@ -79,7 +85,6 @@
         android:id="@+id/detail_adult"
         android:layout_gravity="center"
         android:text="Adult"
-        android:layout_marginBottom="10dp"
         android:textColor="@color/detail_title"
         android:textSize="20sp" />
 
@@ -88,7 +93,6 @@
         android:layout_height="wrap_content"
         android:text="Language"
         android:id="@+id/detail_lang"
-        android:layout_marginBottom="10dp"
         android:layout_gravity="center"
         android:textColor="@color/detail_title"
         android:textSize="20sp" />
@@ -100,7 +104,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="release"
-        android:layout_marginBottom="10dp"
         android:id="@+id/detail_release"
         android:textColor="@color/detail_title"
         android:textSize="20sp"/>
@@ -112,10 +115,18 @@
         android:textStyle="italic|bold"
         android:layout_gravity="center"
         android:textSize="20sp"
+        android:layout_marginBottom="16dp"
         android:textColor="@color/detail_title"
         android:id="@+id/detail_duration"/>
 
-
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/castList"
+        android:text="Emma, David"
+        android:layout_gravity="center"
+        android:textSize="14dp"
+        android:textColor="@color/detail_title"/>
       </LinearLayout>
 
 
@@ -126,31 +137,26 @@
         android:layout_gravity="center"
         android:numStars="5"
         android:id="@+id/detail_rating"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="5dp"
+        android:backgroundTint="@color/rating_bar_color"
+        android:progressTint="@color/rating_bar_color"
+        android:secondaryProgressTint="@color/rating_bar_color"
         />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="overview"
         android:layout_gravity="center"
-        android:padding="10dp"
+        android:padding="5dp"
         android:textSize="14sp"
         android:textColor="@color/detail_title"
         android:id="@+id/detail_overview"/>
 
-    <ScrollView
+    <ListView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:scrollbars="vertical">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:id="@+id/trailerLinearLayout">
-
-        </LinearLayout>
-    </ScrollView>
+        android:id="@+id/trailer_list_view"/>
     </LinearLayout>
 
 </LinearLayout>
+</ScrollView>
