@@ -1,6 +1,7 @@
 package com.example.tarunkukreja.moviesdb;
 
 import android.app.ProgressDialog;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -32,9 +33,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by tarunkukreja on 19/03/17.
- */
+
 
 public class FragmentPopular extends Fragment {
 
@@ -44,8 +43,7 @@ public class FragmentPopular extends Fragment {
    // GridView gridView ;
 
     private RecyclerView recyclerView ;
-    private RecyclerView.LayoutManager grid ;
-
+   // private RecyclerView.LayoutManager grid ;
     private SwipeRefreshLayout swipeRefreshLayout ;
     private ProgressDialog progressDialog ;
     private SearchView searchView;
@@ -68,7 +66,7 @@ public class FragmentPopular extends Fragment {
       //  int height = windowManager.getDefaultDisplay().getHeight() ;
        // int height =  window.getAttributes().y ;
 
-        grid = new GridLayoutManager(getActivity(), 2);
+       // grid = new GridLayoutManager(getActivity(), 2) ;
       //  view.setLayoutParams(new GridLayoutManager.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int)(height/2.5)));
 
         new MoviesPop().execute("http://api.themoviedb.org/3/movie/popular?api_key=" + BuildConfig.MOVIESDB_API_KEY) ;
@@ -295,7 +293,12 @@ public class FragmentPopular extends Fragment {
             super.onPostExecute(res);
 
             MovieAdapter movieAdapter = new MovieAdapter(res);
-            recyclerView.setLayoutManager(grid);
+            if(getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+                recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+
+            }else if(getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+                recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
+            }
              recyclerView.setAdapter(movieAdapter);
 //            gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 //                @Override

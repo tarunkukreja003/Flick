@@ -19,10 +19,7 @@ import java.util.List;
 
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 
-///**
-// * Created by tarunkukreja on 26/03/17.
-// */
-//
+
 public class TrailerAdapter extends ArrayAdapter {
 
     private static final String LOG_Tag = TrailerAdapter.class.getSimpleName() ;

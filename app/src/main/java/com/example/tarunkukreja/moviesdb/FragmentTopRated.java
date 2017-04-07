@@ -31,9 +31,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by tarunkukreja on 19/03/17.
- */
+
 
 public class FragmentTopRated extends Fragment {
 

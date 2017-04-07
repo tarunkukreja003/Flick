@@ -1,8 +1,6 @@
 package com.example.tarunkukreja.moviesdb;
 
-/**
- * Created by tarunkukreja on 09/03/17.
- */
+
 
 public class MoviePage {
 

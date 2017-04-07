@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,9 +18,6 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-/**
- * Created by tarunkukreja on 16/03/17.
- */
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder> implements Filterable{
 
@@ -115,6 +113,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder
     public void onBindViewHolder(MyViewHolder holder, int position) {
 
 
+
         holder.title.setText(moviePageList.get(position).getTitle());
         String url = moviePageList.get(position).getImage();
 
@@ -196,6 +195,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder
         //  private TextView overview ;
         //  private TextView language ;
         ImageView imageView ;
+        CardView cardView ;
         View rootView ;
         //  private RatingBar ratingBar ;
         // private TextView releaseDate ;
@@ -210,6 +210,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder
             //   holder.language = (TextView) convertView.findViewById(R.id.lang);
             // holder.overview = (TextView) convertView.findViewById(R.id.overview);
             imageView = (ImageView) view.findViewById(R.id.image_view);
+            cardView = (CardView)view.findViewById(R.id.card_view) ;
             roboto = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto 500.ttf") ;
             //        holder.adult = (TextView)convertView.findViewById(R.id.adult) ;
             //          holder.ratingBar = (RatingBar)convertView.findViewById(R.id.rating);

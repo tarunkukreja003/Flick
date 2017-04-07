@@ -13,10 +13,6 @@ import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 
-/**
- * Created by tarunkukreja on 18/03/17.
- */
-
 public class HomeActivity extends AppCompatActivity implements ActionBar.TabListener{
 
     ViewPager viewPager;

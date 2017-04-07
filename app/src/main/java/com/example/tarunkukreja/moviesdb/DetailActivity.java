@@ -33,9 +33,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by tarunkukreja on 13/03/17.
- */
+
 
 public class DetailActivity extends AppCompatActivity {
 

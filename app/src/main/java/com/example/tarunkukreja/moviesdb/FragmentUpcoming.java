@@ -31,9 +31,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by tarunkukreja on 20/03/17.
- */
+
 
 public class FragmentUpcoming extends Fragment {
 

@@ -1,8 +1,6 @@
 package com.example.tarunkukreja.moviesdb;
 
-/**
- * Created by tarunkukreja on 02/04/17.
- */
+
 
 public class TrailerCLass {
 
